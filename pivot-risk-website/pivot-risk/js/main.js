@@ -21,6 +21,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const yearEl = document.querySelector('[data-year]');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+  // Services page: reveal the additional services on demand
+  const servicesToggle = document.querySelector('#toggle-services');
+  const moreServices = document.querySelector('#more-services');
+  if (servicesToggle && moreServices) {
+    servicesToggle.addEventListener('click', () => {
+      const isOpen = !moreServices.classList.contains('is-hidden');
+      moreServices.classList.toggle('is-hidden', isOpen);
+      servicesToggle.setAttribute('aria-expanded', String(!isOpen));
+      servicesToggle.textContent = isOpen ? 'View full services' : 'Show less';
+      if (!isOpen) moreServices.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
   // Contact form: no backend wired up yet, so guide the user clearly
   const form = document.querySelector('#contact-form');
   const status = document.querySelector('#form-status');

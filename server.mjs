@@ -2,7 +2,7 @@
 // Serves pages from html/ at clean URLs, mirroring vercel.json rewrites:
 //   http://localhost:3000/           -> html/index.html
 //   http://localhost:3000/about      -> html/about.html   (also /about.html)
-//   http://localhost:3000/services|team|contact
+//   http://localhost:3000/services|team|blog|contact
 // Run: npm start   (or: node server.mjs)
 
 import http from 'node:http';
@@ -40,6 +40,8 @@ const ROUTES = {
   '/services.html': '/html/services.html',
   '/team': '/html/team.html',
   '/team.html': '/html/team.html',
+  '/blog': '/html/blog.html',
+  '/blog.html': '/html/blog.html',
   '/contact': '/html/contact.html',
   '/contact.html': '/html/contact.html',
 };

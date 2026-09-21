@@ -18,6 +18,10 @@
       "destination": "/html/team.html"
     },
     {
+      "source": "/blog",
+      "destination": "/html/blog.html"
+    },
+    {
       "source": "/contact",
       "destination": "/html/contact.html"
     }

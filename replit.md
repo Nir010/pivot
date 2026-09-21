@@ -14,7 +14,7 @@ workflow runs it on port 5000 for the web preview.
 
 ## Project layout
 
-- `html/` contains the five pages and the shared header/footer fragments.
+- `html/` contains the six pages and the shared header/footer fragments.
 - `css/`, `js/`, and `images/` contain the shared site assets.
 - `vercel.json` is at the repository root for Vercel deployment.
 

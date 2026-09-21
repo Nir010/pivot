@@ -76,6 +76,7 @@ files in `html/`.
 │   ├── about.html          About
 │   ├── services.html       Services
 │   ├── team.html           Team
+│   ├── blog.html           Insights and articles
 │   ├── contact.html        Contact
 │   ├── header.html         Shared nav — loaded via js/main.js
 │   └── footer.html         Shared footer — loaded via js/main.js

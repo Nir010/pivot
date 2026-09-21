@@ -32,12 +32,15 @@ vercel --prod # promote to production
 **Option B — Git + Vercel dashboard**
 1. Push this folder to a GitHub/GitLab/Bitbucket repo.
 2. In the Vercel dashboard, "Add New Project" → import the repo.
-3. Framework preset: choose "Other" (it's a static site — no build command
-   needed, no output directory override needed).
-4. Deploy.
+3. Set the Vercel **Root Directory** to `pivot-risk-website/pivot-risk`.
+4. Framework preset: choose "Other". Leave the build command empty and the
+   output directory empty.
+5. Deploy.
 
-`vercel.json` already sets `cleanUrls: true`, so `/about.html` will also be
-reachable at `/about` once deployed.
+The Vercel configuration must stay at `pivot-risk/vercel.json` (not inside
+`html/`) so Vercel can serve the sibling `css/`, `js/`, and `images/`
+directories. It rewrites `/`, `/about`, `/services`, `/team`, and `/contact`
+to the matching files in `html/`.
 
 ## What to edit before launch
 

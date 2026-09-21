@@ -8,7 +8,7 @@
 
 :root{
   --ink:        #0d2349;
-  --text:       #000000;
+  --text:       #243247;
   --deep-blue:  #163d7f;
   --brand-blue: #2157b7;
   --brand-red:  #c72f2b;
@@ -117,7 +117,7 @@ p{ margin: 0 0 1em;}
   justify-content: space-between;
   padding-top: 14px;
   padding-bottom: 14px;
-  background: linear-gradient(95deg, #cf7a6e 0%, #cf7a6e 12.5%, #5e8fd0 25%, #5e8fd0 75%, #cf7a6e 87.5%, #cf7a6e 100%);
+  background: var(--white);
   border-radius: 0 0 12px 12px;
 }
 .logo{
@@ -128,15 +128,15 @@ p{ margin: 0 0 1em;}
   text-align: left;
 }
 .logo img{
-  height: 5rem;
+  height: 3.75rem;
   width: auto;
   display: block;
 }
 .logo-name{
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 3rem;
-  color: navy;
+  font-size: clamp(1.7rem, 3vw, 2.35rem);
+  color: var(--ink);
   line-height: 1.1;
 }
 .logo-name span{
@@ -454,7 +454,7 @@ p{ margin: 0 0 1em;}
   padding: 0;
 }
 .site-footer .wrap{
-  background: linear-gradient(120deg, #cf7a6e 0%, #cf7a6e 12.5%, #5e8fd0 25%, #5e8fd0 75%, #cf7a6e 87.5%, #cf7a6e 100%);
+  background: var(--white);
   padding-top: 56px;
   padding-bottom: 28px;
   border-radius: 12px 12px 0 0;
@@ -539,13 +539,23 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .nav-links a.active::after{ background: var(--brand-red); }
   .nav-toggle{
     display: inline-flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 38px; height: 38px;
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    background: none;
-    color: #ffffff;
+    gap: 4px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--white);
+    color: var(--ink);
     cursor: pointer;
+  }
+  .nav-toggle span{
+    display: block;
+    width: 16px;
+    height: 2px;
+    background: currentColor;
   }
   .grid-3, .grid-2{ grid-template-columns: 1fr; }
   .leadership-grid{ grid-template-columns: 1fr; }

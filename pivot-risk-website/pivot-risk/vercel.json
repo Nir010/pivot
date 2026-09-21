@@ -3,23 +3,23 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/index.html"
+      "destination": "/html/index.html"
     },
     {
       "source": "/about",
-      "destination": "/about.html"
+      "destination": "/html/about.html"
     },
     {
       "source": "/services",
-      "destination": "/services.html"
+      "destination": "/html/services.html"
     },
     {
       "source": "/team",
-      "destination": "/team.html"
+      "destination": "/html/team.html"
     },
     {
       "source": "/contact",
-      "destination": "/contact.html"
+      "destination": "/html/contact.html"
     }
   ]
 }

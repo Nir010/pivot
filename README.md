@@ -24,23 +24,22 @@ To stop the server, press Ctrl+C.
 **Option A — Vercel CLI**
 ```bash
 npm i -g vercel
-cd pivot-risk
 vercel        # first deploy, follow the prompts
 vercel --prod # promote to production
 ```
 
 **Option B — Git + Vercel dashboard**
-1. Push this folder to a GitHub/GitLab/Bitbucket repo.
+1. Push this repository to a GitHub/GitLab/Bitbucket repo.
 2. In the Vercel dashboard, "Add New Project" → import the repo.
-3. Set the Vercel **Root Directory** to `pivot-risk-website/pivot-risk`.
+3. Leave the Vercel **Root Directory** set to the repository root.
 4. Framework preset: choose "Other". Leave the build command empty and the
    output directory empty.
 5. Deploy.
 
-The Vercel configuration must stay at `pivot-risk/vercel.json` (not inside
-`html/`) so Vercel can serve the sibling `css/`, `js/`, and `images/`
-directories. It rewrites `/`, `/about`, `/services`, `/team`, and `/contact`
-to the matching files in `html/`.
+The Vercel configuration must stay at `vercel.json` in the repository root so
+Vercel can serve the sibling `css/`, `js/`, and `images/` directories. It
+rewrites `/`, `/about`, `/services`, `/team`, and `/contact` to the matching
+files in `html/`.
 
 ## What to edit before launch
 
@@ -71,7 +70,7 @@ to the matching files in `html/`.
 ## File structure
 
 ```
-pivot-risk/
+.
 ├── html/                 All pages
 │   ├── index.html          Home
 │   ├── about.html          About

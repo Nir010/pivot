@@ -6,14 +6,18 @@ framework, so it deploys to Vercel with zero configuration.
 
 ## Preview locally
 
-You don't need Node for the site itself, only to run a local server so
-relative paths behave the same as they will in production.
+Because the pages load the shared header/footer with JavaScript, they must be
+opened over HTTP — opening the files directly from disk (`file://`) blocks that
+and the header/footer won't appear. Use the included zero-dependency server,
+which matches the deployed (Vercel) URLs:
 
 ```bash
-npx serve .
+npm start
 ```
 
-Then open the printed local URL (usually http://localhost:3000).
+Then open http://localhost:3000 — the home page loads directly, and
+`/about`, `/services`, `/team`, `/contact` (and `/about.html` etc.) all work.
+To stop the server, press Ctrl+C.
 
 ## Deploy to Vercel
 
@@ -40,10 +44,10 @@ reachable at `/about` once deployed.
 - **Contact details** — email, phone, and address appear in the footer of
   every page and on `contact.html`. Search-and-replace
   `hello@pivotrisk.com.np` and `+977 1-000-0000` with the real ones.
-- **Team page** (`team.html`) — all six profiles are placeholders (names,
-  roles, bios, and initials-in-a-box photos). Replace with real people and
-  swap each `<div class="photo">X</div>` for an `<img>` tag once you have
-  headshots.
+- **Team page** (`team.html`) — the two directors have real headshots
+  (`udaya.png`, `krishna.png`); the seven member profiles still use placeholder
+  stock photos (`boy.png` / `girl.png`). Replace those with real headshots as
+  they become available.
 - **Services copy** (`services.html`, and the summary on `index.html`) —
   written from a generic risk-consulting brief. Adjust to match what Pivot
   Risk actually offers.
@@ -65,16 +69,22 @@ reachable at `/about` once deployed.
 
 ```
 pivot-risk/
-├── index.html       Home
-├── about.html        About
-├── services.html      Services
-├── team.html          Team
-├── contact.html        Contact
-├── css/styles.css      Design tokens + shared styles
-├── js/main.js            Mobile nav, footer year, contact form handler
-├── vercel.json
+├── html/                 All pages
+│   ├── index.html          Home
+│   ├── about.html          About
+│   ├── services.html       Services
+│   ├── team.html           Team
+│   ├── contact.html        Contact
+│   ├── header.html         Shared nav — loaded via js/main.js
+│   └── footer.html         Shared footer — loaded via js/main.js
+├── images/                logo.png, udaya.png, krishna.png, boy.png, girl.png
+├── css/styles.css          Design tokens + shared styles
+├── js/main.js              Loads header/footer, mobile nav, active link,
+│                           footer year, contact form handler
+├── server.mjs              Zero-dependency local server (npm start)
+├── vercel.json             cleanUrls + rewrites for the html/ pages
 ├── package.json
-└── README.md          (this file)
+└── README.md              (this file)
 ```
 
 ## Design notes

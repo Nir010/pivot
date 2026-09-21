@@ -111,6 +111,7 @@ p{ margin: 0 0 1em;}
   z-index: 50;
   background: linear-gradient(110deg, var(--brand-red) 0%, var(--brand-red) 25%, var(--brand-blue) 62%, var(--deep-blue) 100%);
   box-shadow: 0 8px 24px rgba(13, 35, 73, 0.14);
+  animation: navEnter 0.7s ease-out both;
 }
 .site-nav .wrap{
   display: flex;
@@ -127,17 +128,24 @@ p{ margin: 0 0 1em;}
   gap: 12px;
   line-height: 1;
   text-align: left;
+  padding: 9px 18px 10px 12px;
+  margin-top: -1px;
+  margin-bottom: -1px;
+  background: var(--white);
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 8px 18px rgba(13, 35, 73, 0.12);
 }
 .logo img{
   height: 3.75rem;
   width: auto;
   display: block;
+  animation: logoFloat 5s ease-in-out 0.8s infinite;
 }
 .logo-name{
   font-family: var(--serif);
   font-weight: 600;
   font-size: clamp(1.7rem, 3vw, 2.35rem);
-  color: var(--white);
+  color: var(--ink);
   line-height: 1.1;
 }
 .logo-name span{
@@ -146,7 +154,7 @@ p{ margin: 0 0 1em;}
   font-size: 0.9rem;
   font-weight: 500;
   letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.86);
+  color: var(--brand-red);
   margin-top: 2px;
 }
 .nav-links{
@@ -188,6 +196,7 @@ p{ margin: 0 0 1em;}
   text-align: justify;
   position: relative;
   z-index: 2;
+  animation: contentRise 0.8s ease-out 0.12s both;
 }
 .hero h1{ text-align: left; }
 .hero-logo{
@@ -460,7 +469,14 @@ p{ margin: 0 0 1em;}
   padding-bottom: 28px;
   border-radius: 12px 12px 0 0;
 }
-.footer-logo{ display: inline-block; margin-bottom: 6px; }
+.footer-logo{
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 7px 12px;
+  background: var(--white);
+  border-radius: 10px;
+  box-shadow: 0 8px 18px rgba(13, 35, 73, 0.12);
+}
 .footer-logo img{ height: 2.6rem; width: auto; display: block; }
 .footer-grid{
   display: grid;
@@ -488,6 +504,7 @@ p{ margin: 0 0 1em;}
   padding: 56px 0 20px;
   border-bottom: 1px solid var(--line);
 }
+.page-head .wrap{ animation: contentRise 0.75s ease-out both; }
 .page-head .eyebrow{ color: var(--brand-red); font-size: 2rem; font-weight: 500; margin-bottom: 10px; }
 
 /* ---------- Blog ---------- */
@@ -507,7 +524,13 @@ p{ margin: 0 0 1em;}
   box-shadow: 0 14px 30px rgba(13, 35, 73, 0.06);
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: contentRise 0.65s ease-out both;
 }
+.blog-card:nth-child(2){ animation-delay: 0.08s; }
+.blog-card:nth-child(3){ animation-delay: 0.16s; }
+.blog-card:nth-child(4){ animation-delay: 0.24s; }
+.blog-card:nth-child(5){ animation-delay: 0.32s; }
+.blog-card:nth-child(6){ animation-delay: 0.4s; }
 .blog-card::before{
   content: '';
   position: absolute;
@@ -573,6 +596,19 @@ p{ margin: 0 0 1em;}
 .blog-banner h2{ max-width: 18ch; color: var(--white); }
 .blog-banner p{ max-width: 58ch; color: rgba(255, 255, 255, 0.88); }
 
+@keyframes navEnter{
+  from{ opacity: 0; transform: translateY(-12px); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+@keyframes logoFloat{
+  0%, 100%{ transform: translateY(0) rotate(0deg); }
+  50%{ transform: translateY(-3px) rotate(-1deg); }
+}
+@keyframes contentRise{
+  from{ opacity: 0; transform: translateY(18px); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+
 /* ---------- Utility ---------- */
 .mt-0{ margin-top: 0; }
 .is-hidden{ display: none; }
@@ -591,7 +627,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior: auto; }
-  *{ animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  *, *::before, *::after{
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* ---------- Responsive ---------- */

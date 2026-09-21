@@ -8,9 +8,6 @@
     { "source": "/services", "destination": "/pivot-risk-website/pivot-risk/html/services.html" },
     { "source": "/team", "destination": "/pivot-risk-website/pivot-risk/html/team.html" },
     { "source": "/contact", "destination": "/pivot-risk-website/pivot-risk/html/contact.html" },
-    { "source": "/css/(.*)", "destination": "/pivot-risk-website/pivot-risk/css/$1" },
-    { "source": "/js/(.*)", "destination": "/pivot-risk-website/pivot-risk/js/$1" },
-    { "source": "/images/(.*)", "destination": "/pivot-risk-website/pivot-risk/images/$1" },
-    { "source": "/html/(.*)", "destination": "/pivot-risk-website/pivot-risk/html/$1" }
+    { "source": "/:path*", "destination": "/pivot-risk-website/pivot-risk/:path*" }
   ]
 }

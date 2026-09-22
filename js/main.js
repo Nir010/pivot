@@ -70,4 +70,55 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // Blog page: render published PDF blogs
+  const blogList = document.querySelector('#blog-list');
+  if (blogList) {
+    const esc = (s) =>
+      String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    const TEMPLATE_BLOGS = [
+      {
+        title: 'Actuarial Thinking for Everyday Decisions',
+        category: 'Actuarial',
+        desc: 'A practical look at how actuarial discipline — valuation, reserving and pricing — sharpens everyday business decisions.',
+        date: '2026-09-21',
+        pdf: '/blogs/actuarial-thinking-2026.pdf',
+        img: '/images/blog/actuarial-thinking.jpg',
+      },
+      {
+        title: 'Building Resilience in a Changing Nepal',
+        category: 'Resilience',
+        desc: 'How scenario planning, financial preparation and local operating knowledge hold together as one connected discipline.',
+        date: '2026-09-21',
+        pdf: '/blogs/resilience-nepal-2026.pdf',
+        img: '',
+      },      
+    ];
+
+    const readDate = (iso) => {
+      if (!iso) return '';
+      const d = new Date(iso + 'T00:00:00');
+      if (Number.isNaN(d.getTime())) return iso;
+      return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    };
+
+    const cardFor = (b, index) => {
+      const cover = b.img
+        ? `<div class="blog-cover"><img src="${esc(b.img)}" alt="${esc(b.title)}" loading="lazy"></div>`
+        : '';
+      return `
+        <article class="blog-card${b.img ? ' has-cover' : ''}">
+          ${cover}
+          <span class="index">${String(index).padStart(2, '0')}</span>
+          <span class="category">${esc(b.category || 'Journal')}</span>
+          <h3><a href="${esc(b.pdf)}" target="_blank" rel="noopener">${esc(b.title)}</a></h3>
+          <p>${esc(b.desc)}</p>
+          <span class="meta">Published ${esc(readDate(b.date))}</span>
+          <a class="read-link" href="${esc(b.pdf)}" target="_blank" rel="noopener">Open blog</a>
+        </article>`;
+    };
+
+    blogList.innerHTML = TEMPLATE_BLOGS.map((b, i) => cardFor(b, i + 1)).join('');
+  }
 });

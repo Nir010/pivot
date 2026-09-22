@@ -16,16 +16,113 @@
   <div class="wrap">
     <h2>Our Team</h2>
     <p class="eyebrow">The people behind the assessments</p>
-    
     <p class="lede">A high skilled and well experienced team <br> Every engagement is led by someone who has actually done the analysis, not just signed off on it.</p>
   </div>
 </section>
 
 <!--
-    TEAM STRUCTURE: leadership (directors) appear first with name, photo,
-  designation and a short bio. Remaining team members sit below with name,
-  photo and designation only.
+    TEAM DATA: edit the JSON inside #team-data to update names, designations
+  and profile details. The page shows only name + designation; click the info
+  icon on the right of each row to open the profile popup.
 -->
+<script type="application/json" id="team-data">
+[
+  {
+    "group": "leadership",
+    "name": "Er. Udaya Raj Adhikari",
+    "designation": "Executive Director",
+    "photo": "../images/udaya.png",
+    "qualifications": ["MACS – Risk Analytics, BE Computer Engineering"],
+    "experience": [
+      "20 years of experience in Risk Analytics, Catastrophe Modelling, Actuarial Valuations and Risk Advisory",
+      "Dynamic experience in IT Process Design, ICT Framework, Risk Modelling"
+    ],
+    "works": [
+      "Insurance Industry Specialist on Strengthening the Enabling Environment for Disaster Risk Financing in Nepal",
+      "Solvency Assessment and Loss Reserving Techniques"
+    ]
+  },
+  {
+    "group": "leadership",
+    "name": "Er. Krishna Aryal",
+    "designation": "Director",
+    "photo": "../images/krishna.png",
+    "qualifications": ["ME – Chemical Engineering, BE Structural Engineering – IOE"],
+    "experience": [
+      "Exclusive experience in designing Seismic Resistant Buildings",
+      "Risk Analysis of Civil Structures"
+    ],
+    "works": [
+      "Estimation and Valuation of Civil and Mechanical Structures",
+      "Supervision and Monitoring of rural infrastructural development work for quality assurance"
+    ]
+  },
+  {
+    "group": "members",
+    "name": "Aadarsha Shrestha",
+    "designation": "Assistant Actuarial Manager",
+    "photo": "../images/boy.png",
+    "qualifications": [],
+    "experience": [],
+    "works": []
+  },
+  {
+    "group": "members",
+    "name": "Sabita Gaihre",
+    "designation": "HR/Finance Officer",
+    "photo": "../images/girl.png",
+    "qualifications": [],
+    "experience": [],
+    "works": []
+  },
+  {
+    "group": "members",
+    "name": "Sokphungwa Limbu",
+    "designation": "Survey Analytics",
+    "photo": "../images/girl.png",
+    "qualifications": [],
+    "experience": [],
+    "works": []
+  },
+  {
+    "group": "members",
+    "name": "Eva Chaudhary",
+    "designation": "Assistant Survey Manager",
+    "photo": "../images/girl.png",
+    "qualifications": [],
+    "experience": [],
+    "works": []
+  },
+  {
+    "group": "members",
+    "name": "Sudhir Thapa",
+    "designation": "Assistant Survey Manager",
+    "photo": "../images/boy.png",
+    "qualifications": [],
+    "experience": [],
+    "works": []
+  },
+  {
+    "group": "members",
+    "name": "Laxmi Pathak Adhikari",
+    "designation": "Operation and Legal Head",
+    "photo": "../images/girl.png",
+    "qualifications": [],
+    "experience": [],
+    "works": []
+  },
+  {
+    "group": "members",
+    "name": "Anuja Bhandari",
+    "designation": "Operation Assistant",
+    "photo": "../images/girl.png",
+    "qualifications": [],
+    "experience": [],
+    "works": []
+  }
+]
+</script>
+
 <section class="section">
   <div class="wrap">
 
@@ -36,33 +133,7 @@
       </div>
     </div>
 
-    <div class="leadership-grid">
-      <div class="leader">
-        <div class="photo"><img src="../images/udaya.png" alt="Er. Udaya Raj Adhikari"></div>
-        <h3>Er. Udaya Raj Adhikari</h3>
-        <span class="role">Executive Director</span>
-        <ul class="leader-list">
-          <li>MACS – Risk Analytics, BE Computer Engineering</li>
-          <li>20 years of experience in Risk Analytics, Catastrophe Modelling, Actuarial Valuations and Risk Advisory</li>
-          <li>Dynamic experience in IT Process Design, ICT Framework, Risk Modelling</li>
-          <li>Insurance Industry Specialist on Strengthening the Enabling Environment for Disaster Risk Financing in Nepal</li>
-          <li>Solvency Assessment and Loss Reserving Techniques</li>
-        </ul>
-      </div>
-
-      <div class="leader">
-        <div class="photo"><img src="../images/krishna.png" alt="Er. Krishna Aryal"></div>
-        <h3>Er. Krishna Aryal</h3>
-        <span class="role">Director</span>
-        <ul class="leader-list">
-          <li>ME – Chemical Engineering, BE Structural Engineering – IOE</li>
-          <li>Exclusive experience in designing Seismic Resistant Buildings</li>
-          <li>Risk Analysis of Civil Structures</li>
-          <li>Estimation and Valuation of Civil and Mechanical Structures</li>
-          <li>Supervision and Monitoring of rural infrastructural development work for quality assurance</li>
-        </ul>
-      </div>
-    </div>
+    <div class="leadership-grid" id="leadership-list"></div>
 
   </div>
 </section>
@@ -77,49 +148,8 @@
       </div>
     </div>
 
-    <div class="team-grid">
-      <div class="person">
-        <div class="photo"><img src="../images/boy.png" alt=""></div>
-        <h3>Aadarsha Shrestha</h3>
-        <span class="role">Assistant Actuarial Manager</span>
-      </div>
+    <div class="team-grid" id="members-list"></div>
 
-      <div class="person">
-        <div class="photo"><img src="../images/girl.png" alt=""></div>
-        <h3>Sabita Gaihre</h3>
-        <span class="role">HR/Finance Officer</span>
-      </div>
-
-      <div class="person">
-        <div class="photo"><img src="../images/girl.png" alt=""></div>
-        <h3>Sokphungwa Limbu</h3>
-        <span class="role">Survey Analytics</span>
-      </div>
-
-      <div class="person">
-        <div class="photo"><img src="../images/girl.png" alt=""></div>
-        <h3>Eva Chaudhary</h3>
-        <span class="role">Assistant Survey Manager</span>
-      </div>
-
-      <div class="person">
-        <div class="photo"><img src="../images/boy.png" alt=""></div>
-        <h3>Sudhir Thapa</h3>
-        <span class="role">Assistant Survey Manager</span>
-      </div>
-
-<div class="person">
-        <div class="photo"><img src="../images/girl.png" alt=""></div>
-        <h3>Laxmi Pathak Adhikari</h3>
-        <span class="role">Operation and Legal Head</span>
-      </div>
-
-      <div class="person">
-        <div class="photo"><img src="../images/girl.png" alt=""></div>
-        <h3>Anuja Bhandari</h3>
-        <span class="role">Operation Assistant</span>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -134,6 +164,21 @@
 </section>
 
 <footer data-include="footer.html"></footer>
+
+<div class="modal" id="team-modal" aria-hidden="true">
+  <div class="modal-overlay" data-team-close></div>
+  <div class="modal-card modal-team" role="dialog" aria-modal="true" aria-label="Team member profile">
+    <button type="button" class="modal-close" data-team-close aria-label="Close">&times;</button>
+    <div class="team-profile-head">
+      <div class="team-profile-photo" id="team-photo"></div>
+      <div>
+        <h3 class="modal-title" id="team-name"></h3>
+        <span class="team-designation" id="team-designation"></span>
+      </div>
+    </div>
+    <div id="team-details"></div>
+  </div>
+</div>
 
 <script src="/js/main.js"></script>
 </body>

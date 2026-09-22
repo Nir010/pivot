@@ -157,4 +157,109 @@ document.addEventListener('DOMContentLoaded', () => {
       pdfFrame.addEventListener('load', () => {});
     }
   }
+
+  // Team page: name + designation rows that open a profile popup
+  const teamData = document.querySelector('#team-data');
+  if (teamData) {
+    const esc = (s) =>
+      String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    let members = [];
+    try {
+      members = JSON.parse(teamData.textContent);
+    } catch (err) {
+      members = [];
+    }
+
+    const leadershipList = document.querySelector('#leadership-list');
+    const membersList = document.querySelector('#members-list');
+
+    const rowFor = (m) => `
+      <div class="${m.group === 'leadership' ? 'leader' : 'person'}">
+        <div class="photo"><img src="${esc(m.photo)}" alt="${esc(m.name)}" loading="lazy"></div>
+        <div class="person-head">
+          <div class="team-intro">
+            <h3>${esc(m.name)}</h3>
+            <span class="team-designation">${esc(m.designation)}</span>
+          </div>
+          <button type="button" class="team-info" data-team-open aria-label="View ${esc(m.name)}'s profile" title="View profile">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+          </button>
+        </div>
+      </div>`;
+
+    if (leadershipList) leadershipList.innerHTML = members.filter((m) => m.group === 'leadership').map(rowFor).join('');
+    if (membersList) membersList.innerHTML = members.filter((m) => m.group === 'members').map(rowFor).join('');
+
+    const teamModal = document.querySelector('#team-modal');
+    const teamPhoto = document.querySelector('#team-photo');
+    const teamName = document.querySelector('#team-name');
+    const teamDesignation = document.querySelector('#team-designation');
+    const teamDetails = document.querySelector('#team-details');
+
+    const listFor = (items) =>
+      items && items.length
+        ? `<ul class="team-detail-list">${items.map((i) => `<li>${esc(i)}</li>`).join('')}</ul>`
+        : '<p class="team-detail-empty">Details will be added soon.</p>';
+
+    const detailsFor = (m) => `
+      <div class="team-detail">
+        <h4>Qualifications</h4>
+        ${listFor(m.qualifications)}
+      </div>
+      <div class="team-detail">
+        <h4>Experience</h4>
+        ${listFor(m.experience)}
+      </div>
+      <div class="team-detail">
+        <h4>Major works</h4>
+        ${listFor(m.works)}
+      </div>`;
+
+    const openProfile = (m) => {
+      if (!teamModal) return;
+      if (teamName) teamName.textContent = m.name;
+      if (teamDesignation) teamDesignation.textContent = m.designation;
+      if (teamPhoto) {
+        teamPhoto.innerHTML = m.photo
+          ? `<img src="${esc(m.photo)}" alt="${esc(m.name)}">`
+          : `<span class="team-photo-fallback">${esc(m.name.charAt(0))}</span>`;
+      }
+      if (teamDetails) teamDetails.innerHTML = detailsFor(m);
+      teamModal.classList.add('open');
+      teamModal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    };
+    const closeProfile = () => {
+      if (!teamModal) return;
+      teamModal.classList.remove('open');
+      teamModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    };
+
+    [leadershipList, membersList].forEach((list) => {
+      if (!list) return;
+      list.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-team-open]');
+        if (!btn) return;
+        const row = btn.closest('.person, .leader');
+        const name = row && row.querySelector('h3') ? row.querySelector('h3').textContent : '';
+        const member = members.find((m) => m.name === name);
+        if (member) openProfile(member);
+      });
+    });
+
+    if (teamModal) {
+      teamModal.addEventListener('click', (e) => {
+        if (e.target.closest('[data-team-close]')) closeProfile();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && teamModal.classList.contains('open')) closeProfile();
+      });
+    }
+  }
 });

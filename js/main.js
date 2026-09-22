@@ -112,13 +112,49 @@ document.addEventListener('DOMContentLoaded', () => {
           ${cover}
           <span class="index">${String(index).padStart(2, '0')}</span>
           <span class="category">${esc(b.category || 'Journal')}</span>
-          <h3><a href="${esc(b.pdf)}" target="_blank" rel="noopener">${esc(b.title)}</a></h3>
+          <h3><a href="${esc(b.pdf)}" data-blog-pdf>${esc(b.title)}</a></h3>
           <p>${esc(b.desc)}</p>
           <span class="meta">Published ${esc(readDate(b.date))}</span>
-          <a class="read-link" href="${esc(b.pdf)}" target="_blank" rel="noopener">Open blog</a>
+          <a class="read-link" href="${esc(b.pdf)}" data-blog-pdf>Open blog</a>
         </article>`;
     };
 
     blogList.innerHTML = TEMPLATE_BLOGS.map((b, i) => cardFor(b, i + 1)).join('');
+
+    // Open the PDF in an embedded popup viewer on the same page.
+    const pdfModal = document.querySelector('#pdf-modal');
+    const pdfFrame = document.querySelector('#pdf-frame');
+    const pdfTitle = document.querySelector('#pdf-modal-title');
+    if (pdfModal && pdfFrame) {
+      const openPdf = (url) => {
+        pdfFrame.src = url;
+        pdfModal.classList.add('open');
+        pdfModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      };
+      const closePdf = () => {
+        pdfModal.classList.remove('open');
+        pdfModal.setAttribute('aria-hidden', 'true');
+        pdfFrame.removeAttribute('src');
+        document.body.style.overflow = '';
+      };
+
+      blogList.addEventListener('click', (e) => {
+        const link = e.target.closest('[data-blog-pdf]');
+        if (!link) return;
+        e.preventDefault();
+        const card = link.closest('.blog-card');
+        if (pdfTitle && card) pdfTitle.textContent = card.querySelector('h3').textContent;
+        openPdf(link.getAttribute('href'));
+      });
+
+      pdfModal.addEventListener('click', (e) => {
+        if (e.target.closest('[data-pdf-close]')) closePdf();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && pdfModal.classList.contains('open')) closePdf();
+      });
+      pdfFrame.addEventListener('load', () => {});
+    }
   }
 });

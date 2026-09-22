@@ -32,7 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Highlight the current page in the nav
     const current = location.pathname.split('/').filter(Boolean).pop() || 'index.html';
-    const normalize = (p) => p.replace(/\.html$/, '').replace(/^index$/, '');
+    const normalize = (href) => {
+      const file = (href.split('/').pop() || 'index.html').replace(/\.html$/i, '');
+      return file === 'index' ? 'home' : file;
+    };
     document.querySelectorAll('.nav-links a').forEach((a) => {
       if (normalize(a.getAttribute('href')) === normalize(current)) a.classList.add('active');
     });

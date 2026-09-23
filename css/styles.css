@@ -525,6 +525,23 @@ p{ margin: 0 0 1em;}
   transform: translateX(-50%);
   animation: formAlertEnter 0.25s ease-out both;
 }
+.form-success{
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  z-index: 100;
+  max-width: min(90vw, 520px);
+  margin: 0 !important;
+  padding: 14px 22px;
+  border: 1px solid #247044;
+  background: #2f8f55;
+  color: var(--white);
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 12px 28px rgba(13, 35, 73, 0.24);
+  transform: translateX(-50%);
+  animation: formAlertEnter 0.25s ease-out both;
+}
 
 .info-block{
   margin-bottom: 26px;

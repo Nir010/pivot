@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       clearTimeout(formAlertTimer);
-      if (status) status.classList.remove('form-error');
+      if (status) status.classList.remove('form-error', 'form-success');
       if (status) status.textContent = 'Sending your message...';
 
       const email = form.querySelector('#email');
@@ -81,7 +81,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         if (!response.ok) throw new Error('Formspree request failed');
         form.reset();
-        if (status) status.textContent = 'Thanks. Your message has been sent.';
+        if (status) {
+          status.classList.add('form-success');
+          status.textContent = 'Thanks. Your message has been sent.';
+        }
+        formAlertTimer = setTimeout(() => {
+          if (status) {
+            status.classList.remove('form-success');
+            status.textContent = '';
+          }
+        }, 3000);
       } catch (err) {
         if (status) status.classList.add('form-error');
         if (status) status.textContent = 'Sorry, your message could not be sent. Please email us directly.';

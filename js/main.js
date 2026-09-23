@@ -74,12 +74,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (email && replyTo) replyTo.value = email.value;
 
       try {
-        const response = await fetch(form.action, {
+        const secondAction = form.dataset.secondAction;
+        const options = {
           method: 'POST',
           body: new FormData(form),
           headers: { Accept: 'application/json' },
-        });
-        if (!response.ok) throw new Error('Formspree request failed');
+        };
+        const requests = [fetch(form.action, options)];
+        if (secondAction) requests.push(fetch(secondAction, options));
+        const responses = await Promise.all(requests);
+        if (!responses.every((r) => r.ok)) throw new Error('Formspree request failed');
         form.reset();
         if (status) {
           status.classList.add('form-success');

@@ -58,15 +58,48 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Contact form: no backend wired up yet, so guide the user clearly
+  // Contact form: submit through Formspree without leaving the page
   const form = document.querySelector('#contact-form');
   const status = document.querySelector('#form-status');
   if (form) {
-    form.addEventListener('submit', (e) => {
+    let formAlertTimer;
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      if (status) {
-        status.textContent =
-          "This form isn't connected to an inbox yet — email us directly at hello@pivotrisk.com.np, or connect a form service (see README) to receive submissions here.";
+      clearTimeout(formAlertTimer);
+      if (status) status.classList.remove('form-error', 'form-success');
+      if (status) status.textContent = 'Sending your message...';
+
+      const email = form.querySelector('#email');
+      const replyTo = form.querySelector('#replyto');
+      if (email && replyTo) replyTo.value = email.value;
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        if (!response.ok) throw new Error('Formspree request failed');
+        form.reset();
+        if (status) {
+          status.classList.add('form-success');
+          status.textContent = 'Thanks. Your message has been sent.';
+        }
+        formAlertTimer = setTimeout(() => {
+          if (status) {
+            status.classList.remove('form-success');
+            status.textContent = '';
+          }
+        }, 3000);
+      } catch (err) {
+        if (status) status.classList.add('form-error');
+        if (status) status.textContent = 'Sorry, your message could not be sent. Please email us directly.';
+        formAlertTimer = setTimeout(() => {
+          if (status) {
+            status.classList.remove('form-error');
+            status.textContent = '';
+          }
+        }, 3000);
       }
     });
   }

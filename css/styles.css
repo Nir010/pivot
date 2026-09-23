@@ -566,6 +566,23 @@ p{ margin: 0 0 1em;}
 .page-head .wrap{ animation: contentRise 0.75s ease-out both; }
 .page-head .eyebrow{ color: var(--brand-red); font-size: 2rem; font-weight: 500; margin-bottom: 10px; }
 
+/* ---------- Projects ---------- */
+.section-intro{ max-width: 34ch; color: var(--text); margin: 0; }
+.project-card{ position: relative; display: flex; flex-direction: column; min-height: 100%; }
+.project-card .num{ margin-top: 18px; }
+.project-card h3{ max-width: 24ch; }
+.project-card p{ color: var(--slate); }
+.project-status, .project-focus{
+  color: var(--brand-red);
+  font-size: 0.77rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.project-status{ align-self: flex-start; padding-bottom: 8px; border-bottom: 1px solid var(--brand-red); }
+.project-status-complete{ color: var(--deep-blue); border-bottom-color: var(--deep-blue); }
+.project-focus{ margin-top: auto; padding-top: 20px; color: var(--deep-blue); letter-spacing: 0.05em; }
+
 /* ---------- Blog ---------- */
 .blog-grid{
   display: grid;

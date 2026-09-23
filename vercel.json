@@ -14,6 +14,10 @@
       "destination": "/html/services.html"
     },
     {
+      "source": "/project",
+      "destination": "/html/project.html"
+    },
+    {
       "source": "/team",
       "destination": "/html/team.html"
     },

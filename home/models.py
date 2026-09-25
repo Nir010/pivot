@@ -1,5 +1,5 @@
 from django.db import models
-# CLASS 1:
+# MODEL 1:
 # A single global settings row: everything about the company that appears on every page (branding, contact, socials, footer).
 class SiteSettings(models.Model):
     site_name = models.CharField(max_length=100)
@@ -8,11 +8,18 @@ class SiteSettings(models.Model):
     phone = models.CharField(max_length=30, blank=True)
     address = models.TextField(blank=True)
 
+    def save(self, *args, **kwargs):
+        # Force this row to always be the one with id=1.
+        # Creating a "second" settings row just overrides the first — so
+        # a duplicate can never exist.
+        self.pk = 1
+        super().save(*args, **kwargs)
+    
     def __str__(self):
         return self.site_name
 
 
-# CLASS 2:
+# MODEL 2:
 # One row per team member shown on the Team page.
 # Photos are uploaded through the admin and stored in MEDIA_ROOT.
 class TeamMember(models.Model):
@@ -29,7 +36,7 @@ class TeamMember(models.Model):
         return self.name
 
 
-# CLASS 3:
+# MODEL 3:
 # One row per service listed on the Services page.
 class Service(models.Model):
     title = models.CharField(max_length=200)
@@ -45,7 +52,7 @@ class Service(models.Model):
         return self.title
 
 
-# CLASS 4:
+# MODEL 4:
 # One row per notice/announcement, e.g. shown on the home page.
 class Notice(models.Model):
     title = models.CharField(max_length=200)
@@ -62,7 +69,7 @@ class Notice(models.Model):
     
 
 
-# CLASS 5:
+# MODEL 5:
 # One row per social profile shown in the site's footer/header.
 class SocialLink(models.Model):
     platform = models.CharField(max_length=50)      # e.g. "LinkedIn"
@@ -77,7 +84,7 @@ class SocialLink(models.Model):
 
 
 
-# CLASS 6:
+# MODEL 6:
 # One row per message submitted through the Contact form.
 class ContactMessage(models.Model):
     name = models.CharField(max_length=100)

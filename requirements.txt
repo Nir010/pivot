@@ -1,0 +1,6 @@
+# Python dependencies for the Pivot Risk Django backend.
+# To install everything:  pip install -r requirements.txt
+
+Django>=5.0           # The web framework
+psycopg[binary]>=3.1  # PostgreSQL driver (lets Django talk to Postgres)
+Pillow>=10.0           # Lets Django handle ImageField uploads

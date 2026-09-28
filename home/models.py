@@ -27,6 +27,13 @@ class TeamMember(models.Model):
     role = models.CharField(max_length=100, blank=True)   # e.g. "Managing Director"
     photo = models.ImageField(upload_to='team/', blank=True, null=True)
     bio = models.TextField(blank=True)
+
+# leadership = the directors; members = the wider team
+    GROUP_CHOICES = [('leadership', 'Leadership'), ('members', 'Members')]
+    group = models.CharField(max_length=20, choices=GROUP_CHOICES, default='members')
+    qualifications = models.TextField(blank=True)   # e.g. "MACS – Risk Analytics, BE Computer Engineering"
+    experience = models.TextField(blank=True)       # one line per achievement, separated by newlines
+    works = models.TextField(blank=True)            # major works, one per line
     order = models.PositiveIntegerField(default=0)        # sort position on the page
 
     class Meta:
@@ -43,6 +50,7 @@ class Service(models.Model):
     summary = models.TextField(blank=True)          # short blurb on cards
     detail = models.TextField(blank=True)           # longer description on the page
     icon_class = models.CharField(max_length=100, blank=True)  # CSS class for the icon
+    is_primary = models.BooleanField(default=True)  # True = main grid, False = "Other services"
     order = models.PositiveIntegerField(default=0)
 
     class Meta:

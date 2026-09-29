@@ -1,3 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
+from .models import Post
 
-# Create your views here.
+# Blog listing: every published post, newest first (from Meta.ordering).
+def blog_list(request):
+    posts = Post.objects.filter(is_published=True)
+    return render(request, 'blog/blog_list.html', {'posts': posts})
+
+
+# A single post, addressed by its slug in the URL (e.g. /blog/my-article/).
+def blog_detail(request, slug):
+    post = get_object_or_404(Post, slug=slug, is_published=True)
+    return render(request, 'blog/blog_detail.html', {'post': post})

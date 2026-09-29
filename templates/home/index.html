@@ -1,0 +1,192 @@
+{% extends "base.html" %} {% load static %} {% block title %}Pivot Risk Pvt.
+Ltd. — Risk Management &amp; Advisory, Lalitpur{% endblock %} {% block content
+%}
+
+<section class="hero">
+  <svg
+    class="contour"
+    viewBox="0 0 1200 600"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    <path
+      d="M-20,420 C220,360 340,480 560,440 C780,400 900,300 1220,340"
+      fill="none"
+      stroke="#1b3a5c"
+      stroke-width="1.2"
+      opacity="0.18"
+    />
+    <path
+      d="M-20,470 C260,410 380,520 600,480 C820,440 940,360 1220,400"
+      fill="none"
+      stroke="#1b3a5c"
+      stroke-width="1.2"
+      opacity="0.14"
+    />
+    <path
+      d="M-20,520 C300,470 420,560 640,530 C860,500 980,430 1220,460"
+      fill="none"
+      stroke="#b8923f"
+      stroke-width="1.4"
+      opacity="0.35"
+    />
+    <path
+      d="M-20,570 C320,540 440,600 660,580 C880,560 1000,510 1220,530"
+      fill="none"
+      stroke="#1b3a5c"
+      stroke-width="1.2"
+      opacity="0.1"
+    />
+  </svg>
+  <div class="wrap hero-grid">
+    <div>
+      <h1>
+        Every decision carries
+        <span class="hero-highlight">exposure</span>.<br />We help you carry it
+        well.
+      </h1>
+      <p class="lede">
+        Pivot Risk works with organizations across and beyond Nepal to identify
+        what could go wrong, price it honestly and build the plans that keep
+        operations standing when it does.
+      </p>
+      <div class="hero-cta">
+        <a href="{% url 'team' %}" class="btn btn-solid">Talk to our team</a>
+        <a href="{% url 'services' %}" class="btn">See our services</a>
+      </div>
+    </div>
+    <div class="hero-media">
+      <img src="{% static 'logo.png' %}" alt="Pivot Risk" class="hero-logo" />
+    </div>
+  </div>
+</section>
+
+<section class="stat-row">
+  <div class="wrap stat-grid">
+    <div class="stat">
+      <span class="n">3000+</span
+      ><span class="l">loss assessments completed</span>
+    </div>
+    <div class="stat">
+      <span class="n">50+</span><span class="l">organizations advised</span>
+    </div>
+    <div class="stat">
+      <span class="n">10+</span><span class="l">sectors served</span>
+    </div>
+    <div class="stat">
+      <span class="n stat-n-text">National and<br />International</span
+      ><span class="l">clients</span>
+    </div>
+    <div class="stat">
+      <span class="n">20+ years</span
+      ><span class="l">of combined experience</span>
+    </div>
+  </div>
+</section>
+
+<section class="section section-ink">
+  <div class="wrap">
+    <div class="hero-grid why-grid">
+      <div>
+        <p
+          class="eyebrow"
+          style="color: #cb1100; font-size: xx-large; font-weight: bold"
+        >
+          Why Pivot Risk
+        </p>
+      </div>
+      <div>
+        <p
+          style="
+            color: #e6e9ed;
+            font-family: var(--serif);
+            font-size: 1.4rem;
+            line-height: 1.5;
+            max-width: 34ch;
+          "
+        >
+          "Risk isn't something to eliminate. It's something to understand well
+          enough to price, plan for and pivot around."
+        </p>
+      </div>
+      <div>
+        <a
+          href="{% url 'about' %}"
+          class="btn btn-gold"
+          style="border-color: #cb1100; color: #ffffff"
+          >More about our approach</a
+        >
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div
+    class="wrap"
+    style="
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+    "
+  >
+    <div>
+      <h2 class="mt-0">Have a decision that needs a sharper look?</h2>
+      <p>
+        Tell us what you're looking for. We'll tell you what we'd want to know
+        before signing off on it.
+      </p>
+    </div>
+    <a href="{% url 'contact' %}" class="btn btn-solid">Start a conversation</a>
+  </div>
+</section>
+
+{% endblock content %} {% block footer %} {{ block.super }} {% endblock footer
+%} {% block extra_js %} {# The important-notice popup. Only renders when a
+notice is ticked important. #} {% if notices %}
+<script>
+  (function () {
+    const modal = document.querySelector("#notice-modal");
+    if (!modal) return;
+    // Show it as soon as the page loads.
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+
+    // Close on (a) the X button or (b) clicking the dimmed background.
+    const close = () => {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    };
+    modal.addEventListener("click", (e) => {
+      if (e.target.closest("[data-notice-close]")) close();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") close();
+    });
+  })();
+</script>
+
+<div class="modal" id="notice-modal" aria-hidden="true">
+  <div class="modal-overlay" data-notice-close></div>
+  <div class="modal-card">
+    <button
+      type="button"
+      class="modal-close"
+      data-notice-close
+      aria-label="Close"
+    >
+      &times;
+    </button>
+    <h3 class="modal-title">Announcements</h3>
+    {% for notice in notices %}
+    <p><strong>{{ notice.title }}</strong></p>
+    <p>{{ notice.body|linebreaksbr }}</p>
+    {% endfor %}
+  </div>
+</div>
+{% endif %} {% endblock extra_js %}

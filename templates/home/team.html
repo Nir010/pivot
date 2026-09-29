@@ -1,0 +1,308 @@
+{% extends "base.html" %} {% load team_tags %} {% block title %}Team — Pivot
+Risk Pvt. Ltd.{% endblock %} {% block content %}
+
+<section class="page-head">
+  <div class="wrap">
+    <h2>Our Team</h2>
+    <p class="eyebrow">The people behind the assessments</p>
+    <p class="lede">
+      A high skilled and well experienced team <br />
+      Every engagement is led by someone who has actually done the analysis, not
+      just signed off on it.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2 class="mt-0">Leadership</h2>
+        <p
+          class="eyebrow"
+          style="font-size: 1.4rem; color: var(--brand-red); font-weight: bold"
+        >
+          The directors behind Pivot Risk
+        </p>
+      </div>
+    </div>
+
+    <div class="leadership-grid">
+      {% for member in leadership %}
+      <div class="leader">
+        <div class="photo">
+          {% if member.photo %}<img
+            src="{{ member.photo.url }}"
+            alt="{{ member.name }}"
+            loading="lazy"
+          />
+          {% else %}<span class="team-photo-fallback"
+            >{{ member.name|first }}</span
+          >{% endif %}
+        </div>
+        <div class="person-head">
+          <div class="team-intro">
+            <h3>{{ member.name }}</h3>
+            <span class="team-designation">{{ member.role }}</span>
+          </div>
+          <button
+            type="button"
+            class="team-info"
+            data-team-open
+            data-target="profile-{{ forloop.counter }}"
+            aria-label="View {{ member.name }}'s profile"
+            title="View profile"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <span class="team-info-label">More info</span>
+          </button>
+          <template id="profile-{{ forloop.counter }}">
+            <div class="team-detail">
+              <h4>Qualifications</h4>
+              <ul class="team-detail-list">
+                {% for item in member.qualifications|lines %}
+                <li>{{ item }}</li>
+                {% empty %}
+                <p class="team-detail-empty">Details will be added soon.</p>
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="team-detail">
+              <h4>Experience</h4>
+              <ul class="team-detail-list">
+                {% for item in member.experience|lines %}
+                <li>{{ item }}</li>
+                {% empty %}
+                <p class="team-detail-empty">Details will be added soon.</p>
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="team-detail">
+              <h4>Major works</h4>
+              <ul class="team-detail-list">
+                {% for item in member.works|lines %}
+                <li>{{ item }}</li>
+                {% empty %}
+                <p class="team-detail-empty">Details will be added soon.</p>
+                {% endfor %}
+              </ul>
+            </div>
+          </template>
+        </div>
+      </div>
+      {% empty %}
+      <p>No leadership added yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2 class="mt-0">Other Team Members</h2>
+        <p
+          class="eyebrow"
+          style="font-size: 1.4rem; color: var(--brand-red); font-weight: bold"
+        >
+          The wider team behind the work
+        </p>
+      </div>
+    </div>
+
+    <div class="team-grid">
+      {% for member in members %}
+      <div class="person">
+        <div class="photo">
+          {% if member.photo %}<img
+            src="{{ member.photo.url }}"
+            alt="{{ member.name }}"
+            loading="lazy"
+          />
+          {% else %}<span class="team-photo-fallback"
+            >{{ member.name|first }}</span
+          >{% endif %}
+        </div>
+        <div class="person-head">
+          <div class="team-intro">
+            <h3>{{ member.name }}</h3>
+            <span class="team-designation">{{ member.role }}</span>
+          </div>
+          <button
+            type="button"
+            class="team-info"
+            data-team-open
+            data-target="profile-{{ forloop.counter }}"
+            aria-label="View {{ member.name }}'s profile"
+            title="View profile"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <span class="team-info-label">More info</span>
+          </button>
+          <template id="profile-{{ forloop.counter }}">
+            <div class="team-detail">
+              <h4>Qualifications</h4>
+              <ul class="team-detail-list">
+                {% for item in member.qualifications|lines %}
+                <li>{{ item }}</li>
+                {% empty %}
+                <p class="team-detail-empty">Details will be added soon.</p>
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="team-detail">
+              <h4>Experience</h4>
+              <ul class="team-detail-list">
+                {% for item in member.experience|lines %}
+                <li>{{ item }}</li>
+                {% empty %}
+                <p class="team-detail-empty">Details will be added soon.</p>
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="team-detail">
+              <h4>Major works</h4>
+              <ul class="team-detail-list">
+                {% for item in member.works|lines %}
+                <li>{{ item }}</li>
+                {% empty %}
+                <p class="team-detail-empty">Details will be added soon.</p>
+                {% endfor %}
+              </ul>
+            </div>
+          </template>
+        </div>
+      </div>
+      {% empty %}
+      <p>No team members added yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div
+    class="wrap"
+    style="
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+    "
+  >
+    <div>
+      <h2 class="mt-0">Interested in joining the team?</h2>
+      <p>
+        We're always open to hearing from risk, compliance, and finance
+        professionals based in the Kathmandu Valley.
+      </p>
+    </div>
+    <a href="{% url 'contact' %}" class="btn btn-solid">Get in touch</a>
+  </div>
+</section>
+
+<!-- The profile popup modal -->
+<div class="modal" id="team-modal" aria-hidden="true">
+  <div class="modal-overlay" data-team-close></div>
+  <div
+    class="modal-card modal-team"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Team member profile"
+  >
+    <button
+      type="button"
+      class="modal-close"
+      data-team-close
+      aria-label="Close"
+    >
+      &times;
+    </button>
+    <div class="team-profile-head">
+      <div class="team-profile-photo" id="team-photo"></div>
+      <div>
+        <h3 class="modal-title" id="team-name"></h3>
+        <span class="team-designation" id="team-designation"></span>
+      </div>
+    </div>
+    <div id="team-details"></div>
+  </div>
+</div>
+
+{% endblock content %} {% block extra_js %}
+<script>
+  // Opens the profile popup using the <template> stored next to each person.
+  (function () {
+    const modal = document.getElementById("team-modal");
+    if (!modal) return;
+
+    document.querySelectorAll("[data-team-open]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tpl = document.getElementById(btn.getAttribute("data-target"));
+        const row = btn.closest(".person, .leader");
+        const img = row.querySelector(".photo img");
+        const photoBox = document.getElementById("team-photo");
+
+        document.getElementById("team-name").textContent =
+          row.querySelector("h3").textContent;
+        document.getElementById("team-designation").textContent =
+          row.querySelector(".team-designation").textContent;
+        photoBox.innerHTML = img
+          ? img.outerHTML
+          : '<span class="team-photo-fallback">' +
+            row.querySelector("h3").textContent.charAt(0) +
+            "</span>";
+        document.getElementById("team-details").innerHTML = tpl
+          ? tpl.innerHTML
+          : '<p class="team-detail-empty">Details will be added soon.</p>';
+
+        modal.classList.add("open");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      });
+    });
+
+    const close = () => {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    };
+    document
+      .querySelectorAll("[data-team-close]")
+      .forEach((el) => el.addEventListener("click", close));
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") close();
+    });
+  })();
+</script>
+{% endblock extra_js %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Services — Pivot Risk Pvt. Ltd.{% endblock %}
+
+{% block content %}
+
+<section class="page-head">
+  <div class="wrap">
+    <h2>Our Services</h2>
+    <p class="eyebrow">We help organizations carry risk</p>
+    <p class="lede">We provide integrated actuarial, risk management, insurance, engineering valuation and financial advisory services designed to help organizations understand risk, strengthen decision making and improve financial resilience.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="grid grid-2">
+      {% for service in primary_services %}
+        <div class="cell">
+          <h3>{{ service.title }}</h3>
+          <p>{{ service.detail|default:service.summary }}</p>
+        </div>
+      {% empty %}
+        <p>No services added yet.</p>
+      {% endfor %}
+    </div>
+
+    <div style="text-align:center; margin-top: 48px;">
+      <button type="button" id="toggle-services" class="btn btn-solid" aria-expanded="false" aria-controls="more-services">View full services</button>
+    </div>
+  </div>
+</section>
+
+<section class="section is-hidden" id="more-services">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2 class="mt-0">Other Services</h2>
+        <p class="eyebrow" style="font-size: 1.4rem; color: var(--brand-red); font-weight: bold;">More ways we can help</p>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      {% for service in other_services %}
+        <div class="cell">
+          <h3>{{ service.title }}</h3>
+          <p>{{ service.detail|default:service.summary }}</p>
+        </div>
+      {% empty %}
+        <p>No additional services yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock content %}

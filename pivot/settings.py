@@ -25,13 +25,11 @@ load_dotenv(BASE_DIR / ".env")
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-_qr2hx8(cic8y)=72mg9g*g0l@kzoy6g8!$ly3ho@ygzx(dv(y"
-
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-<xt#$#pk_y=-v@4akubk0uqxtf6@iw^0b61!&ubmxwm&(d^3+63>")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
 # Application definition
 
@@ -150,6 +148,23 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MAILERS = {
     "default": {
-        "BACKEND": "django.core.mail.backends.console.EmailBackend",
-    },
+        "BACKEND": os.environ.get(
+            "MAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
+        ),
+        "OPTIONS": {
+            "host": os.environ.get("EMAIL_HOST", ""),
+            "port": int(os.environ.get("EMAIL_PORT", 587)),
+            "username": os.environ.get("EMAIL_HOST_USER", ""),
+            "password": os.environ.get("EMAIL_HOST_PASSWORD", ""),
+            "use_tls": os.environ.get("EMAIL_USE_TLS", "True") == "True",
+        },
+    }
 }
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True

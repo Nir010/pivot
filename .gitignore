@@ -1,3 +1,14 @@
 # Secrets
-
 .env
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Django uploads + collected static
+media/
+staticfiles/
+
+# Editor
+.DS_Store

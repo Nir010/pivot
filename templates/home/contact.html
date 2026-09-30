@@ -21,7 +21,7 @@
       {# Show the one-time success message after a POST #}
       {% if messages %}
         {% for message in messages %}
-          <p class="form-success" role="status">{{ message }}</p>
+          <p class="form-success" role="status" data-form-success>{{ message }}</p>
         {% endfor %}
       {% endif %}
 
@@ -76,5 +76,19 @@
 
   </div>
 </section>
+{% block extra_js %}
+<script>
+  // Auto-hide the one-time success message after a few seconds.
+  (function () {
+    const el = document.querySelector("[data-form-success]");
+    if (!el) return;
+    setTimeout(() => {
+      el.style.transition = "opacity 0.6s ease";
+      el.style.opacity = "0";
+      setTimeout(() => el.remove(), 600);
+    }, 4000);
+  })();
+</script>
+{% endblock extra_js %}
 
 {% endblock content %}

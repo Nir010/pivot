@@ -54,9 +54,9 @@ sudo chown -R deployer:deployer /var/www/pivot
 Create `/var/www/pivot/.env`:
 
 ```bash
-DEBUG=False
-ALLOWED_HOSTS=pivotrisk.com.np,www.pivotrisk.com.np
-SECRET_KEY=generate-a-long-random-string
+DJANGO_DEBUG=False
+ALLOWED_HOSTS=pivotrisks.com,www.pivotrisks.com
+SECRET_KEY=YOUR_SECRET_KEY
 DB_NAME=pivot
 DB_USER=postgres
 DB_PASSWORD=strong-postgres-password
@@ -175,7 +175,7 @@ Create `/etc/nginx/sites-available/pivot`:
 ```nginx
 server {
     listen 80;
-    server_name pivotrisk.com.np www.pivotrisk.com.np;
+    server_name pivotrisks.com www.pivotrisks.com;
 
     location /static/ {
         alias /var/www/pivot/staticfiles/;
@@ -189,6 +189,7 @@ server {
         proxy_pass http://127.0.0.1:8000;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;   # REQUIRED
     }
 }
 ```
@@ -207,7 +208,7 @@ sudo systemctl reload nginx
 
 ```bash
 sudo apt install -y certbot python3-certbot-nginx
-sudo certbot --nginx -d pivotrisk.com.np -d www.pivotrisk.com.np
+sudo certbot --nginx -d pivotrisks.com -d www.pivotrisks.com
 ```
 
 ---

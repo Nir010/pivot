@@ -7,7 +7,7 @@
     <title>{% block title %}Pivot Risk Pvt. Ltd.{% endblock %}</title>
     <link rel="icon" type="image/png" href="{% static 'logo.png' %}" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles.css' %}?v=2" />
   </head>
   <body>
     {% block header %}
@@ -86,7 +86,7 @@
     </footer>
     {% endblock footer %}
 
-    <script src="{% static 'main.js' %}"></script>
+    <script src="{% static 'main.js' %}?v=2"></script>
     {% block extra_js %}{% endblock %}
   </body>
 </html>

@@ -1,9 +1,9 @@
 from django.shortcuts import get_object_or_404, render
 from .models import Post
 
-# Blog listing: every published post, newest first (from Meta.ordering).
+# Blog listing: pinned posts first, then newest first.
 def blog_list(request):
-    posts = Post.objects.filter(is_published=True)
+    posts = Post.objects.filter(is_published=True).order_by('-is_pinned', '-created_at')
     return render(request, 'blog/blog_list.html', {'posts': posts})
 
 

@@ -6,3 +6,4 @@ psycopg[binary]>=3.1  # PostgreSQL driver (lets Django talk to Postgres)
 Pillow>=10.0          # Lets Django handle ImageField uploads
 django-jazzmin        # Admin theme for Django
 python-dotenv         # For loading environment variables from a .env file
+gunicorn              # Production WSGI server (used on the VPS)

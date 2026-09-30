@@ -1,10 +1,14 @@
 from django.shortcuts import get_object_or_404, render
 from .models import Project
 
-# Project listing: all projects, newest first.
+# Project listing: featured projects first, then the rest.
 def project_list(request):
-    projects = Project.objects.all()
-    return render(request, 'projects/project_list.html', {'projects': projects})
+    featured = Project.objects.filter(is_featured=True)
+    others = Project.objects.filter(is_featured=False)
+    return render(request, 'projects/project_list.html', {
+        'featured_projects': featured,
+        'other_projects': others,
+    })
 
 
 # A single project, by slug

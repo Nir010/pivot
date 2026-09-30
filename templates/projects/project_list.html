@@ -22,8 +22,9 @@
       </div>
     </div>
 
+    {% if featured_projects %}
     <div class="grid grid-2 project-grid">
-      {% for project in projects %}
+      {% for project in featured_projects %}
         <article class="cell project-card">
           <span class="cell num">{{ forloop.counter|stringformat:"02d" }}</span>
           {% if project.thumbnail %}
@@ -33,10 +34,37 @@
           <p>{{ project.summary }}</p>
           <a class="read-link" href="{% url 'project_detail' project.slug %}">View project details</a>
         </article>
-      {% empty %}
-        <p>No projects added yet.</p>
       {% endfor %}
     </div>
+    {% else %}
+      <p class="section-intro">Featured projects will be highlighted here as they are added.</p>
+    {% endif %}
+
+    {% if other_projects %}
+    <div class="section-head" style="margin-top: 48px;">
+      <div>
+        <p class="eyebrow">More work</p>
+        <h2 class="mt-0">All projects</h2>
+      </div>
+    </div>
+    <div class="grid grid-2 project-grid">
+      {% for project in other_projects %}
+        <article class="cell project-card">
+          <span class="cell num">{{ forloop.counter|stringformat:"02d" }}</span>
+          {% if project.thumbnail %}
+            <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" style="max-width:100%; height:auto; margin:0 0 12px;">
+          {% endif %}
+          <h3>{{ project.title }}</h3>
+          <p>{{ project.summary }}</p>
+          <a class="read-link" href="{% url 'project_detail' project.slug %}">View project details</a>
+        </article>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if not featured_projects and not other_projects %}
+      <p>No projects added yet.</p>
+    {% endif %}
   </div>
 </section>
 

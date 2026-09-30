@@ -6,6 +6,8 @@ class SiteSettings(models.Model):
     tagline = models.CharField(max_length=200, blank=True)
     email = models.EmailField(blank=True)
     phone = models.CharField(max_length=30, blank=True)
+    email_2 = models.EmailField(blank=True)   # secondary contact shown on the Contact page
+    phone_2 = models.CharField(max_length=30, blank=True)   # secondary contact phone
     address = models.TextField(blank=True)
 
     def save(self, *args, **kwargs):

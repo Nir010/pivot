@@ -28,13 +28,13 @@
           <span></span><span></span><span></span>
         </button>
         <ul class="nav-links">
-          <li><a href="{% url 'home' %}">Home</a></li>
-          <li><a href="{% url 'about' %}">About</a></li>
-          <li><a href="{% url 'services' %}">Services</a></li>
-          <li><a href="{% url 'project_list' %}">Projects</a></li>
-          <li><a href="{% url 'team' %}">Team</a></li>
-          <li><a href="{% url 'blog_list' %}">Blog</a></li>
-          <li><a href="{% url 'contact' %}">Contact</a></li>
+          <li><a href="{% url 'home' %}"{% if request.path == '/' %} class="active"{% endif %}>Home</a></li>
+          <li><a href="{% url 'about' %}"{% if request.path == '/about/' %} class="active"{% endif %}>About</a></li>
+          <li><a href="{% url 'services' %}"{% if request.path == '/services/' %} class="active"{% endif %}>Services</a></li>
+          <li><a href="{% url 'project_list' %}"{% if request.path == '/projects/' %} class="active"{% endif %}>Projects</a></li>
+          <li><a href="{% url 'team' %}"{% if request.path == '/team/' %} class="active"{% endif %}>Team</a></li>
+          <li><a href="{% url 'blog_list' %}"{% if request.path == '/blog/' %} class="active"{% endif %}>Blog</a></li>
+          <li><a href="{% url 'contact' %}"{% if request.path == '/contact/' %} class="active"{% endif %}>Contact</a></li>
         </ul>
       </div>
     </nav>
@@ -66,10 +66,10 @@
             <ul class="footer-links">
               <li>{{ settings.address }}</li>
               <li>
-                <a href="tel:{{ settings.phone }}">{{ settings.phone }}</a>
+                <a href="tel:{{ settings.phone }}">{{ settings.phone }}</a>{% if settings.phone_2 %}<br><a href="tel:{{ settings.phone_2 }}">{{ settings.phone_2 }}</a>{% endif %}
               </li>
               <li>
-                <a href="mailto:{{ settings.email }}">{{ settings.email }}</a>
+                <a href="mailto:{{ settings.email }}">{{ settings.email }}</a>{% if settings.email_2 %}<br><a href="mailto:{{ settings.email_2 }}">{{ settings.email_2 }}</a>{% endif %}
               </li>
             </ul>
           </div>
@@ -86,7 +86,7 @@
     </footer>
     {% endblock footer %}
 
-    <script src="{% static 'main.js' %}?v=2"></script>
+    <script src="{% static 'main.js' %}?v=3"></script>
     {% block extra_js %}{% endblock %}
   </body>
 </html>

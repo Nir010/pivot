@@ -55,11 +55,15 @@
       </div>
       <div class="info-block">
         <h3>Email</h3>
-        <p class="value"><a href="mailto:{{ settings.email }}">{{ settings.email }}</a></p>
+        <p class="value">
+          <a href="mailto:{{ settings.email }}">{{ settings.email }}</a>{% if settings.email_2 %}, <a href="mailto:{{ settings.email_2 }}">{{ settings.email_2 }}</a>{% endif %}
+        </p>
       </div>
       <div class="info-block">
         <h3>Phone</h3>
-        <p class="value"><a href="tel:{{ settings.phone }}">{{ settings.phone }}</a></p>
+        <p class="value">
+          <a href="tel:{{ settings.phone }}">{{ settings.phone }}</a>{% if settings.phone_2 %}, <a href="tel:{{ settings.phone_2 }}">{{ settings.phone_2 }}</a>{% endif %}
+        </p>
       </div>
       <div class="info-block">
         <h3>Working Hours</h3>

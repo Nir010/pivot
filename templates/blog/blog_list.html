@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Insights — Pivot Risk Pvt. Ltd.{% endblock %}
+
+{% block content %}
+
+<section class="page-head">
+  <div class="wrap">
+    <h2>The Pivot Risk Journal</h2>
+    <p class="eyebrow">Clear thinking for uncertain conditions.</p>
+    <p class="lede">Practical notes on risk, resilience and the decisions that help organizations stay ready for what comes next.</p>
+  </div>
+</section>
+
+<section class="section section-alt" aria-labelledby="latest-insights-title">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow" style="font-size: 1.4rem; color: var(--brand-red); font-weight: bold;">Our blog library</p>
+        <h2 id="latest-insights-title" class="mt-0">Latest insights</h2>
+        <p class="lede">Explore practical perspectives from the Pivot Risk team.</p>
+      </div>
+    </div>
+
+    <div class="blog-grid">
+      {% for post in posts %}
+        <article class="blog-card{% if post.cover_image %} has-cover{% endif %}">
+          {% if post.cover_image %}
+            <div class="blog-cover"><img src="{{ post.cover_image.url }}" alt="{{ post.title }}" loading="lazy"></div>
+          {% endif %}
+          <span class="index">{{ forloop.counter|stringformat:"02d" }}</span>
+          <span class="category">{{ post.category }}</span>
+
+          {% if post.pdf_file %}
+            <h3><a href="{{ post.pdf_file.url }}" data-blog-pdf>{{ post.title }}</a></h3>
+          {% else %}
+            <h3><a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a></h3>
+          {% endif %}
+
+          <p>{{ post.excerpt|default:post.body|truncatewords:30 }}</p>
+          <span class="meta">Published {{ post.created_at|date:"j M Y" }}</span>
+
+          {% if post.pdf_file %}
+            <a class="read-link" href="{{ post.pdf_file.url }}" data-blog-pdf>Open blog</a>
+          {% else %}
+            <a class="read-link" href="{% url 'blog_detail' post.slug %}">Read more</a>
+          {% endif %}
+        </article>
+      {% empty %}
+        <p>No insight posts yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap" style="text-align:center;">
+    <p class="eyebrow" style="color: red; font-weight: bold; font-size: 1.2rem;">Have a question behind the question?</p>
+    <h2>Let’s look at it together.</h2>
+    <p style="max-width: 54ch; margin: 0 auto 24px;">If one of these topics is close to a decision you are making, our team can help you move from a general concern to a practical next step.</p>
+    <a href="{% url 'contact' %}" class="btn btn-solid">Start a conversation</a>
+  </div>
+</section>
+
+<div class="modal" id="pdf-modal" aria-hidden="true">
+  <div class="modal-overlay" data-pdf-close></div>
+  <div class="modal-card modal-pdf" role="dialog" aria-modal="true" aria-label="Blog PDF viewer">
+    <button type="button" class="modal-close" data-pdf-close aria-label="Close">&times;</button>
+    <h3 class="modal-title" id="pdf-modal-title">Blog</h3>
+    <iframe id="pdf-frame" class="pdf-frame" title="Blog PDF" src="about:blank"></iframe>
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+  // Opens a post's PDF in the embedded viewer (drops main.js's hardcoded blog data).
+  (function () {
+    const modal = document.getElementById('pdf-modal');
+    const frame = document.getElementById('pdf-frame');
+    const title = document.getElementById('pdf-modal-title');
+    if (!modal || !frame) return;
+
+    document.querySelectorAll('[data-blog-pdf]').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const card = link.closest('.blog-card');
+        if (title && card) title.textContent = card.querySelector('h3').textContent;
+        frame.src = link.getAttribute('href');
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    const close = () => {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      frame.removeAttribute('src');
+      document.body.style.overflow = '';
+    };
+    document.querySelectorAll('[data-pdf-close]').forEach((el) => el.addEventListener('click', close));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  })();
+</script>
+{% endblock extra_js %}

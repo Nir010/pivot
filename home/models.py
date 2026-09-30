@@ -26,7 +26,6 @@ class TeamMember(models.Model):
     name = models.CharField(max_length=100)
     role = models.CharField(max_length=100, blank=True)   # e.g. "Managing Director"
     photo = models.ImageField(upload_to='team/', blank=True, null=True)
-    bio = models.TextField(blank=True)
 
 # leadership = the directors; members = the wider team
     GROUP_CHOICES = [('leadership', 'Leadership'), ('members', 'Members')]

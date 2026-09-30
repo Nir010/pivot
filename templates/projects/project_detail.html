@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.title }} — Pivot Risk{% endblock %}
+
+{% block content %}
+
+<section class="page-head">
+  <div class="wrap">
+    <p class="eyebrow">{{ project.category }}</p>
+    <h2>{{ project.title }}</h2>
+    {% if project.client %}<p class="lede">Client: {{ project.client }}</p>{% endif %}
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap" style="max-width: 70ch;">
+    {% if project.thumbnail %}
+      <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" style="max-width:100%; height:auto; margin-bottom:24px;">
+    {% endif %}
+    <p>{{ project.summary }}</p>
+    {{ project.detail|linebreaks }}
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2 class="mt-0">Gallery</h2>
+        <p class="eyebrow" style="font-size: 1.4rem; color: var(--brand-red); font-weight: bold;">Project photos</p>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-wrap:wrap; gap:16px;">
+      {% for img in project.images.all %}
+        <figure style="margin:0;">
+          <img src="{{ img.image.url }}" alt="{{ img.caption|default:project.title }}" style="max-width:300px; height:auto; display:block;">
+          {% if img.caption %}<figcaption style="font-size:0.85rem; margin-top:4px;">{{ img.caption }}</figcaption>{% endif %}
+        </figure>
+      {% empty %}
+        <p>No gallery images yet.</p>
+      {% endfor %}
+    </div>
+
+    <p style="margin-top:32px;"><a href="{% url 'project_list' %}" class="btn">← Back to projects</a></p>
+  </div>
+</section>
+
+{% endblock content %}

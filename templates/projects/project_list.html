@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Projects — Pivot Risk Pvt. Ltd.{% endblock %}
+
+{% block content %}
+
+<section class="page-head">
+  <div class="wrap">
+    <h2>Our Projects</h2>
+    <p class="eyebrow">Practical work for complex decisions</p>
+    <p class="lede">Explore the projects our team is working on. Each project card connects directly to its dedicated project page.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Featured projects</p>
+        <h2 class="mt-0">Explore our work</h2>
+        <p class="section-intro">Select a project to view its details.</p>
+      </div>
+    </div>
+
+    <div class="grid grid-2 project-grid">
+      {% for project in projects %}
+        <article class="cell project-card">
+          <span class="cell num">{{ forloop.counter|stringformat:"02d" }}</span>
+          {% if project.thumbnail %}
+            <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" style="max-width:100%; height:auto; margin:0 0 12px;">
+          {% endif %}
+          <h3>{{ project.title }}</h3>
+          <p>{{ project.summary }}</p>
+          <a class="read-link" href="{% url 'project_detail' project.slug %}">View project details</a>
+        </article>
+      {% empty %}
+        <p>No projects added yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap" style="text-align:left; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:24px;">
+    <div>
+      <h2 class="mt-0">Planning a project of your own?</h2>
+      <p>Bring us the question, and we will help define the work needed to answer it.</p>
+    </div>
+    <a href="{% url 'contact' %}" class="btn btn-solid">Start a conversation</a>
+  </div>
+</section>
+
+{% endblock content %}

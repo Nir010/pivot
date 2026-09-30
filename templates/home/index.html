@@ -1,6 +1,8 @@
-{% extends "base.html" %} {% load static %} {% block title %}Pivot Risk Pvt.
-Ltd. — Risk Management &amp; Advisory, Lalitpur{% endblock %} {% block content
-%}
+{% extends "base.html" %} 
+{% load static %} 
+
+{% block title %}Pivot Risk Pvt. Ltd. — Risk Management &amp; Advisory, Lalitpur{% endblock %} 
+{% block content %}
 
 <section class="hero">
   <svg
@@ -144,9 +146,15 @@ Ltd. — Risk Management &amp; Advisory, Lalitpur{% endblock %} {% block content
   </div>
 </section>
 
-{% endblock content %} {% block footer %} {{ block.super }} {% endblock footer
-%} {% block extra_js %} {# The important-notice popup. Only renders when a
-notice is ticked important. #} {% if notices %}
+{% endblock content %} 
+
+{% block footer %} 
+{{ block.super }} 
+{% endblock footer %} 
+
+{% block extra_js %} 
+{# The important-notice popup. Only renders when a notice is ticked important. #} 
+{% if notices %}
 <script>
   (function () {
     const modal = document.querySelector("#notice-modal");

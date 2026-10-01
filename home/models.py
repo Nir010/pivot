@@ -2,13 +2,21 @@ from django.db import models
 # MODEL 1:
 # A single global settings row: everything about the company that appears on every page (branding, contact, socials, footer).
 class SiteSettings(models.Model):
-    site_name = models.CharField(max_length=100)
-    tagline = models.CharField(max_length=200, blank=True)
-    email = models.EmailField(blank=True)
+    site_name = models.TextField(blank=True)
+    tagline = models.TextField(blank=True)
+    address = models.TextField(blank=True)   # short address, shown in the footer
+    contact_address = models.TextField(blank=True)  # detailed address, shown only on the Contact page
+    email = models.EmailField(blank=True)   # general contact, shown on the Contact page
     phone = models.CharField(max_length=30, blank=True)
-    email_2 = models.EmailField(blank=True)   # secondary contact shown on the Contact page
-    phone_2 = models.CharField(max_length=30, blank=True)   # secondary contact phone
-    address = models.TextField(blank=True)
+    email_2 = models.EmailField(blank=True)
+    phone_2 = models.CharField(max_length=30, blank=True)
+    # Department-wise contacts, shown in the footer under Contact.
+    finance_hr_email = models.EmailField(blank=True)
+    finance_hr_phone = models.CharField(max_length=30, blank=True)
+    survey_email = models.EmailField(blank=True)
+    survey_phone = models.CharField(max_length=30, blank=True)
+    actuarial_email = models.EmailField(blank=True)
+    actuarial_phone = models.CharField(max_length=30, blank=True)
 
     def save(self, *args, **kwargs):
         # Force this row to always be the one with id=1.

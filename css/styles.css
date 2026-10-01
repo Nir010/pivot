@@ -585,6 +585,7 @@ p{ margin: 0 0 1em;}
 }
 .site-footer h3{ color: navy; font-size: 2rem; }
 .site-footer p, .site-footer a{ color: var(--text); }
+.footer-dept{ font-weight: 600; }
 .site-footer a:hover{ color: var(--white); text-decoration: underline; text-underline-offset: 3px; }
 .footer-links{ list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; overflow-wrap: anywhere; }
 .footer-bottom{

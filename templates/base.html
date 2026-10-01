@@ -7,7 +7,7 @@
     <title>{% block title %}Pivot Risk Pvt. Ltd.{% endblock %}</title>
     <link rel="icon" type="image/png" href="{% static 'logo.png' %}" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="stylesheet" href="{% static 'styles.css' %}?v=2" />
+    <link rel="stylesheet" href="{% static 'styles.css' %}?v=3" />
   </head>
   <body>
     {% block header %}
@@ -46,8 +46,8 @@
             <a href="{% url 'home' %}" class="footer-logo"
               ><img src="{% static 'logo.png' %}" alt="Pivot Risk"
             /></a>
-            <h3>{{ settings.site_name|default:"Pivot Risk Pvt. Ltd." }}</h3>
-            <p style="max-width: 34ch">{{ settings.tagline }}</p>
+            <h3>{{ settings.site_name|default:"Pivot Risk Pvt. Ltd."|linebreaksbr }}</h3>
+            <p style="max-width: 34ch">{{ settings.tagline|linebreaksbr }}</p>
           </div>
           <div>
             <h3>Site</h3>
@@ -66,10 +66,19 @@
             <ul class="footer-links">
               <li>{{ settings.address }}</li>
               <li>
-                <a href="tel:{{ settings.phone }}">{{ settings.phone }}</a>{% if settings.phone_2 %}<br><a href="tel:{{ settings.phone_2 }}">{{ settings.phone_2 }}</a>{% endif %}
+                <span class="footer-dept">Finance / HR</span>
+                {% if settings.finance_hr_phone %}<br><a href="tel:{{ settings.finance_hr_phone }}">{{ settings.finance_hr_phone }}</a>{% endif %}
+                {% if settings.finance_hr_email %}<br><a href="mailto:{{ settings.finance_hr_email }}">{{ settings.finance_hr_email }}</a>{% endif %}
               </li>
               <li>
-                <a href="mailto:{{ settings.email }}">{{ settings.email }}</a>{% if settings.email_2 %}<br><a href="mailto:{{ settings.email_2 }}">{{ settings.email_2 }}</a>{% endif %}
+                <span class="footer-dept">Survey</span>
+                {% if settings.survey_phone %}<br><a href="tel:{{ settings.survey_phone }}">{{ settings.survey_phone }}</a>{% endif %}
+                {% if settings.survey_email %}<br><a href="mailto:{{ settings.survey_email }}">{{ settings.survey_email }}</a>{% endif %}
+              </li>
+              <li>
+                <span class="footer-dept">Actuarial / Risk Management</span>
+                {% if settings.actuarial_phone %}<br><a href="tel:{{ settings.actuarial_phone }}">{{ settings.actuarial_phone }}</a>{% endif %}
+                {% if settings.actuarial_email %}<br><a href="mailto:{{ settings.actuarial_email }}">{{ settings.actuarial_email }}</a>{% endif %}
               </li>
             </ul>
           </div>
@@ -77,7 +86,7 @@
         <div class="footer-bottom">
           <span
             >© <span data-year>2026</span>
-            <span>{{ settings.site_name|default:"Pivot Risk Pvt. Ltd." }}</span>
+            <span>{{ settings.site_name|default:"Pivot Risk Pvt. Ltd."|linebreaksbr }}</span>
             All rights reserved.</span
           >
           <span>{{ settings.address }}</span>

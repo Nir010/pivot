@@ -11,6 +11,25 @@ admin.site.register(SocialLink)
 # A "ModelAdmin" lets us customise HOW it's listed in the admin.
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'organization', 'is_read', 'created_at')
-    list_filter = ('is_read',)                 # sidebar filter: read / unread
+    # Messages arrive only through the Contact form — they are never created in the admin.
+    def has_add_permission(self, request):
+        return False
+
+    list_display = ('name', 'email', 'organization', 'short_message', 'created_at', 'is_read')
+    list_editable = ('is_read',)                 # tick/untick right in the list = read toggle
+    list_filter = ('is_read',)                   # sidebar filter: read / unread
+    search_fields = ('name', 'email', 'organization', 'message')
     readonly_fields = ('name', 'email', 'organization', 'message', 'created_at')
+    actions = ['mark_read', 'mark_unread']
+
+    @admin.action(description='Mark selected as read')
+    def mark_read(self, request, queryset):
+        queryset.update(is_read=True)
+
+    @admin.action(description='Mark selected as unread')
+    def mark_unread(self, request, queryset):
+        queryset.update(is_read=False)
+
+    def short_message(self, obj):
+        return obj.message[:80] + ('…' if len(obj.message) > 80 else '')
+    short_message.short_description = 'Message'

@@ -51,7 +51,7 @@
     <div>
       <div class="info-block">
         <h3>Office Location</h3>
-        <p class="value">{{ settings.address }}</p>
+        <p class="value">{{ settings.contact_address|default:settings.address|linebreaksbr }}</p>
       </div>
       <div class="info-block">
         <h3>Email</h3>

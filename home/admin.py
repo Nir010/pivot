@@ -4,9 +4,17 @@ from .models import SiteSettings, TeamMember, Service, Notice, SocialLink, Conta
 # The simplest way: just list the model. Admin builds an editor for it.
 admin.site.register(SiteSettings)
 admin.site.register(TeamMember)
-admin.site.register(Service)
 admin.site.register(Notice)
 admin.site.register(SocialLink)
+
+# A "ModelAdmin" lets us customise HOW it's listed in the admin.
+@admin.register(Service)
+class ServiceAdmin(admin.ModelAdmin):
+    list_display = ('title', 'is_primary', 'order')
+    list_filter = ('is_primary',)   # sidebar filter: primary vs other services
+    list_editable = ('is_primary', 'order')   # toggle category + sort right in the list
+    search_fields = ('title', 'summary', 'detail')
+    ordering = ('order', 'title')
 
 # A "ModelAdmin" lets us customise HOW it's listed in the admin.
 @admin.register(ContactMessage)

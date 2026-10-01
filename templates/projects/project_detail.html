@@ -34,7 +34,7 @@
     <div style="display:flex; flex-wrap:wrap; gap:16px;">
       {% for img in project.images.all %}
         <figure style="margin:0;">
-          <img src="{{ img.image.url }}" alt="{{ img.caption|default:project.title }}" style="max-width:300px; height:auto; display:block;">
+          <img src="{{ img.image.url }}" alt="{{ img.caption|default:project.title }}" style="max-width:min(300px,100%); height:auto; display:block;">
           {% if img.caption %}<figcaption style="font-size:0.85rem; margin-top:4px;">{{ img.caption }}</figcaption>{% endif %}
         </figure>
       {% empty %}

@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import (redirect,render,)  # fills a template with data and returns an HTTP response
 from .models import (Notice, Service, ContactMessage, TeamMember)  # imports models.py within the same app
+from .forms import ContactForm
 import urllib.parse
 import urllib.request
 
@@ -69,29 +70,22 @@ def team(request):
 
 def contact(request):
     if request.method == "POST":
-        name = request.POST.get("name", "")
-        email = request.POST.get("email", "")
-        organization = request.POST.get("org", "")
-        message = request.POST.get("message", "")
-
-        if not name or not email or "@" not in email:
+        form = ContactForm(request.POST)
+        if not form.is_valid():
             messages.error(request, "Please fill in your name and a valid email.")
             return redirect("contact")
 
+        cd = form.cleaned_data
         # 1) Always save to the database
         ContactMessage.objects.create(
-            name=name,
-            email=email,
-            organization=organization,
-            message=message,
+            name=cd["name"], email=cd["email"],
+            organization=cd["organization"], message=cd["message"],
         )
-
         # 2) Best-effort forward to Formspree.
         try:
-            _forward_to_formspree(name, email, organization, message)
+            _forward_to_formspree(cd["name"], cd["email"], cd["organization"], cd["message"])
         except Exception:
             pass
-
         messages.success(request, "Thanks — your message has been sent.")
         return redirect("contact")
 

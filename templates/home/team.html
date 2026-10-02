@@ -49,7 +49,7 @@ Risk Pvt. Ltd.{% endblock %} {% block content %}
             type="button"
             class="team-info"
             data-team-open
-            data-target="profile-{{ forloop.counter }}"
+            data-target="profile-lead-{{ forloop.counter }}"
             aria-label="View {{ member.name }}'s profile"
             title="View profile"
           >
@@ -70,7 +70,7 @@ Risk Pvt. Ltd.{% endblock %} {% block content %}
             </svg>
             <span class="team-info-label">More info</span>
           </button>
-          <template id="profile-{{ forloop.counter }}">
+          <template id="profile-lead-{{ forloop.counter }}">
             <div class="team-detail">
               <h4>Qualifications</h4>
               <ul class="team-detail-list">
@@ -147,7 +147,7 @@ Risk Pvt. Ltd.{% endblock %} {% block content %}
             type="button"
             class="team-info"
             data-team-open
-            data-target="profile-{{ forloop.counter }}"
+            data-target="profile-mem-{{ forloop.counter }}"
             aria-label="View {{ member.name }}'s profile"
             title="View profile"
           >
@@ -168,7 +168,7 @@ Risk Pvt. Ltd.{% endblock %} {% block content %}
             </svg>
             <span class="team-info-label">More info</span>
           </button>
-          <template id="profile-{{ forloop.counter }}">
+          <template id="profile-mem-{{ forloop.counter }}">
             <div class="team-detail">
               <h4>Qualifications</h4>
               <ul class="team-detail-list">

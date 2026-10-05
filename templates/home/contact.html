@@ -21,7 +21,11 @@
       {# Show the one-time success message after a POST #}
       {% if messages %}
         {% for message in messages %}
-          <p class="form-success" role="status" data-form-success>{{ message }}</p>
+          {% if 'error' in message.tags %}
+            <p class="form-error" role="alert" data-form-toast>{{ message }}</p>
+          {% else %}
+            <p class="form-success" role="status" data-form-toast>{{ message }}</p>
+          {% endif %}
         {% endfor %}
       {% endif %}
 
@@ -84,14 +88,15 @@
 <script>
   // Auto-hide the one-time success message after a few seconds.
   (function () {
-    const el = document.querySelector("[data-form-success]");
-    if (!el) return;
+  const toasts = document.querySelectorAll("[data-form-toast]");
+  toasts.forEach((el) => {
     setTimeout(() => {
       el.style.transition = "opacity 0.6s ease";
       el.style.opacity = "0";
       setTimeout(() => el.remove(), 600);
     }, 4000);
-  })();
+  });
+})();
 </script>
 {% endblock extra_js %}
 

@@ -34,6 +34,7 @@
           <li><a href="{% url 'project_list' %}"{% if request.path == '/projects/' %} class="active"{% endif %}>Projects</a></li>
           <li><a href="{% url 'team' %}"{% if request.path == '/team/' %} class="active"{% endif %}>Team</a></li>
           <li><a href="{% url 'blog_list' %}"{% if request.path == '/blog/' %} class="active"{% endif %}>Blog</a></li>
+          <li><a href="{% url 'notices' %}"{% if request.path == '/notices/' %} class="active"{% endif %}>Notices</a></li>
           <li><a href="{% url 'contact' %}"{% if request.path == '/contact/' %} class="active"{% endif %}>Contact</a></li>
         </ul>
       </div>
@@ -58,6 +59,7 @@
               <li><a href="{% url 'project_list' %}">Projects</a></li>
               <li><a href="{% url 'team' %}">Team</a></li>
               <li><a href="{% url 'blog_list' %}">Blog</a></li>
+              <li><a href="{% url 'notices' %}">Notices</a></li>
               <li><a href="{% url 'contact' %}">Contact</a></li>
             </ul>
           </div>

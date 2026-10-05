@@ -73,6 +73,8 @@ class Service(models.Model):
 class Notice(models.Model):
     title = models.CharField(max_length=200)
     body = models.TextField(blank=True)
+    image = models.ImageField(upload_to='notices/', blank=True, null=True)
+    pdf_file = models.FileField(upload_to='notices/pdfs/', blank=True, null=True)
     is_active = models.BooleanField(default=True)   # show it or not
     is_important = models.BooleanField(default=False)  # if True, shows as a home-page popup
     created_at = models.DateTimeField(auto_now_add=True)  # set once, on creation

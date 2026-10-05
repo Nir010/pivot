@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Notices — Pivot Risk Pvt. Ltd.{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="wrap">
+    <h2>Notices</h2>
+    <p class="eyebrow">Latest updates</p>
+    <p class="lede">Stay updated with our latest announcements and notices.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    {% if notices %}
+    <div class="grid grid-2">
+      {% for notice in notices %}
+      <div class="cell">
+        {% if notice.image %}
+          <img src="{{ notice.image.url }}" alt="{{ notice.title }}" style="max-width:100%; height:auto; margin-bottom:16px;">
+        {% endif %}
+        <h3>{{ notice.title }}</h3>
+        <p>{{ notice.body|linebreaksbr }}</p>
+        {% if notice.pdf_file %}
+          <a class="btn btn-solid" href="{{ notice.pdf_file.url }}" target="_blank" rel="noopener" style="margin-top:16px;">View PDF</a>
+        {% endif %}
+        <p style="font-size: 0.85rem; color: var(--slate); margin-top: 10px;">{{ notice.created_at|date:"j M Y" }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p>No notices available at the moment.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock content %}

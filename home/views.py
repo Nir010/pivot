@@ -36,11 +36,16 @@ def _forward_to_formspree(name, email, organization, message):
 
 # The home page. Shows an important-notice popup when one is ticked.
 def home(request):  # view function
-    # Fetch active AND important notices
-    notices = Notice.objects.filter(is_active=True, is_important=True)
+    # Fetch active AND important notices (for popup)
+    important_notices = Notice.objects.filter(is_active=True, is_important=True)
+    # All active notices (to show as a list on the home page)
+    active_notices = Notice.objects.filter(is_active=True).order_by('-created_at')
 
     # Pass them to the template under the name "notices"
-    return render(request, "home/index.html", {"notices": notices})
+    return render(request, "home/index.html", {
+        "notices": important_notices,
+        "active_notices": active_notices,
+    })
 
 
 # About page. Mostly fixed prose; the shared header/footer
@@ -95,3 +100,8 @@ def contact(request):
         return redirect("contact")
 
     return render(request, "home/contact.html")
+
+
+def notices_list(request):
+    notices = Notice.objects.filter(is_active=True).order_by('-created_at')
+    return render(request, 'home/notices.html', {'notices': notices})

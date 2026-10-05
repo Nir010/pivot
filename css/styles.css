@@ -338,7 +338,7 @@ p{ margin: 0 0 1em;}
 .leader .photo{
   width: 65%;
   aspect-ratio: 4/5;
-  background: linear-gradient(160deg);
+  background: linear-gradient(160deg, var(--deep-blue), var(--brand-blue));  
   margin-bottom: 16px;
   display: flex;
   align-items: center;
@@ -366,8 +366,7 @@ p{ margin: 0 0 1em;}
 }
 .person .photo{
   aspect-ratio: 4/5;
-  background: linear-gradient(160deg);
-  margin-bottom: 16px;
+background: linear-gradient(160deg, var(--deep-blue), var(--brand-blue));  margin-bottom: 16px;
   display: flex;
   align-items: center;
   justify-content: center;

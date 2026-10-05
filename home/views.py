@@ -4,6 +4,7 @@ from .models import (Notice, Service, ContactMessage, TeamMember)  # imports mod
 from .forms import ContactForm
 import urllib.parse
 import urllib.request
+import threading
 
 FORMSPREE_ENDPOINTS = [
     "https://formspree.io/f/maenjyzw",
@@ -20,15 +21,18 @@ def _forward_to_formspree(name, email, organization, message):
         "_replyto": email,
     }).encode()
     for url in FORMSPREE_ENDPOINTS:
-        req = urllib.request.Request(
-            url,
-            data=payload,
-            headers={
-                "Accept": "application/json",
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-        )
-        urllib.request.urlopen(req, timeout=5)
+        try:
+            req = urllib.request.Request(
+                url,
+                data=payload,
+                headers={
+                    "Accept": "application/json",
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+            )
+            urllib.request.urlopen(req, timeout=3)
+        except Exception:
+            continue  # try the next endpoint; give up silently
 
 # The home page. Shows an important-notice popup when one is ticked.
 def home(request):  # view function
@@ -82,10 +86,11 @@ def contact(request):
             organization=cd["organization"], message=cd["message"],
         )
         # 2) Best-effort forward to Formspree.
-        try:
-            _forward_to_formspree(cd["name"], cd["email"], cd["organization"], cd["message"])
-        except Exception:
-            pass
+        threading.Thread(
+            target=_forward_to_formspree,
+            args=(cd["name"], cd["email"], cd["organization"], cd["message"]),
+            daemon=True,
+        ).start()
         messages.success(request, "Thanks — your message has been sent.")
         return redirect("contact")
 

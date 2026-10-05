@@ -58,7 +58,6 @@ class Service(models.Model):
     title = models.CharField(max_length=200)
     summary = models.TextField(blank=True)          # short blurb on cards
     detail = models.TextField(blank=True)           # longer description on the page
-    icon_class = models.CharField(max_length=100, blank=True)  # CSS class for the icon
     is_primary = models.BooleanField(default=True)  # True = main grid, False = "Other services"
     order = models.PositiveIntegerField(default=0)
 

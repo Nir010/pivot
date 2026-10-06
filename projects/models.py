@@ -28,6 +28,7 @@ class Project(models.Model):
     summary = models.TextField(blank=True)                 # short card text
     detail = models.TextField(blank=True)                  # full page description
     thumbnail = models.ImageField(upload_to='projects/', blank=True, null=True)
+    project_url = models.URLField(blank=True, null=True, help_text="External link to live app (e.g. http://blob:8000/)")
     is_featured = models.BooleanField(default=False)       # show on the home page
     created_at = models.DateTimeField(auto_now_add=True)
 

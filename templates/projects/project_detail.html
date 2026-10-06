@@ -19,6 +19,9 @@
     {% endif %}
     <p>{{ project.summary }}</p>
     {{ project.detail|linebreaks }}
+    {% if project.project_url %}
+      <p><a class="btn btn-solid" href="{{ project.project_url }}" target="_blank" rel="noopener">Open live app</a></p>
+    {% endif %}
   </div>
 </section>
 

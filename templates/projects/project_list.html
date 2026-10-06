@@ -32,7 +32,7 @@
           {% endif %}
           <h3>{{ project.title }}</h3>
           <p>{{ project.summary }}</p>
-          <a class="read-link" href="{% url 'project_detail' project.slug %}">View project details</a>
+          {% if project.project_url %}<a class="read-link" href="{{ project.project_url }}" target="_blank" rel="noopener">Open live app</a>{% else %}<a class="read-link" href="{% url "project_detail" project.slug %}">View project details</a>{% endif %}
         </article>
       {% endfor %}
     </div>
@@ -56,7 +56,7 @@
           {% endif %}
           <h3>{{ project.title }}</h3>
           <p>{{ project.summary }}</p>
-          <a class="read-link" href="{% url 'project_detail' project.slug %}">View project details</a>
+          {% if project.project_url %}<a class="read-link" href="{{ project.project_url }}" target="_blank" rel="noopener">Open live app</a>{% else %}<a class="read-link" href="{% url "project_detail" project.slug %}">View project details</a>{% endif %}
         </article>
       {% endfor %}
     </div>

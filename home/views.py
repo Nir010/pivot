@@ -55,8 +55,8 @@ def about(request):
 
 # Services page: split into the main grid and the "Other services" grid.
 def services(request):
-    primary = Service.objects.filter(is_primary=True)  # main "Our Services" section
-    others = Service.objects.filter(is_primary=False)  # collapsed "Other services" section
+    primary = Service.objects.filter(is_primary=True).order_by('order', 'title')  # main "Our Services" section
+    others = Service.objects.filter(is_primary=False).order_by('order', 'title')  # collapsed "Other services" section
     return render(request, "home/services.html",{
             "primary_services": primary,
             "other_services": others,
@@ -66,8 +66,8 @@ def services(request):
 
 # Team page: split the directors and the wider team for two separate grids.
 def team(request):
-    leadership = TeamMember.objects.filter(group="leadership")
-    members = TeamMember.objects.filter(group="members")
+    leadership = TeamMember.objects.filter(group="leadership").order_by('order', 'name')
+    members = TeamMember.objects.filter(group="members").order_by('order', 'name')
     return render(request, "home/team.html",{
             "leadership": leadership,
             "members": members,

@@ -1,4 +1,5 @@
 from django.db import models
+from pivot.ordering import ORDER_HELP_TEXT, OrderedModel
 
 # MODEL 1:
 # A grouping for projects, e.g. "Governance".
@@ -16,7 +17,8 @@ class ProjectCategory(models.Model):
 
 # MODEL 2:
 # One project shown on the Projects page.
-class Project(models.Model):
+class Project(OrderedModel):
+    ordering_scope = ('is_featured',)
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
     category = models.ForeignKey(
@@ -30,7 +32,7 @@ class Project(models.Model):
     thumbnail = models.ImageField(upload_to='projects/', blank=True, null=True)
     project_url = models.URLField(blank=True, null=True, help_text="External link to live app (e.g. http://blob:8000/)")
     is_featured = models.BooleanField(default=False)       # show on the home page
-    order = models.PositiveIntegerField(default=0, help_text="Lower numbers appear first.")
+    order = models.PositiveIntegerField(default=0, help_text=ORDER_HELP_TEXT)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

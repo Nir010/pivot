@@ -1,4 +1,5 @@
 from django.db import models
+from pivot.ordering import ORDER_HELP_TEXT, OrderedModel
 # MODEL 1:
 # A single global settings row: everything about the company that appears on every page (branding, contact, socials, footer).
 class SiteSettings(models.Model):
@@ -32,7 +33,8 @@ class SiteSettings(models.Model):
 # MODEL 2:
 # One row per team member shown on the Team page.
 # Photos are uploaded through the admin and stored in MEDIA_ROOT.
-class TeamMember(models.Model):
+class TeamMember(OrderedModel):
+    ordering_scope = ('group',)
     name = models.CharField(max_length=100)
     role = models.CharField(max_length=100, blank=True)   # e.g. "Managing Director"
     photo = models.ImageField(upload_to='team/', blank=True, null=True)
@@ -43,7 +45,7 @@ class TeamMember(models.Model):
     qualifications = models.TextField(blank=True)   # e.g. "MACS – Risk Analytics, BE Computer Engineering"
     experience = models.TextField(blank=True)       # one line per achievement, separated by newlines
     works = models.TextField(blank=True)            # major works, one per line
-    order = models.PositiveIntegerField(default=0)        # sort position on the page
+    order = models.PositiveIntegerField(default=0, help_text=ORDER_HELP_TEXT)
 
     class Meta:
         ordering = ['order', 'name']                      # sort by order, then name
@@ -54,12 +56,13 @@ class TeamMember(models.Model):
 
 # MODEL 3:
 # One row per service listed on the Services page.
-class Service(models.Model):
+class Service(OrderedModel):
+    ordering_scope = ('is_primary',)
     title = models.CharField(max_length=200)
     summary = models.TextField(blank=True)          # short blurb on cards
     detail = models.TextField(blank=True)           # longer description on the page
     is_primary = models.BooleanField(default=True)  # True = main grid, False = "Other services"
-    order = models.PositiveIntegerField(default=0)
+    order = models.PositiveIntegerField(default=0, help_text=ORDER_HELP_TEXT)
 
     class Meta:
         ordering = ['order', 'title']

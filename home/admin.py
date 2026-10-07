@@ -3,7 +3,14 @@ from .models import SiteSettings, TeamMember, Service, Notice, SocialLink, Conta
 
 # The simplest way: just list the model. Admin builds an editor for it.
 admin.site.register(SiteSettings)
-admin.site.register(TeamMember)
+
+@admin.register(TeamMember)
+class TeamMemberAdmin(admin.ModelAdmin):
+    list_display = ('name', 'role', 'group', 'order')
+    list_filter = ('group',)
+    list_editable = ('order',)
+    search_fields = ('name', 'role')
+
 @admin.register(Notice)
 class NoticeAdmin(admin.ModelAdmin):
     list_display = ('title', 'is_active', 'is_important', 'created_at')

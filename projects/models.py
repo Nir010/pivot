@@ -30,10 +30,11 @@ class Project(models.Model):
     thumbnail = models.ImageField(upload_to='projects/', blank=True, null=True)
     project_url = models.URLField(blank=True, null=True, help_text="External link to live app (e.g. http://blob:8000/)")
     is_featured = models.BooleanField(default=False)       # show on the home page
+    order = models.PositiveIntegerField(default=0, help_text="Lower numbers appear first.")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['order', '-created_at', '-pk']
 
     def __str__(self):
         return self.title

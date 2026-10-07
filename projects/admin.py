@@ -15,7 +15,8 @@ class ProjectImageInline(admin.TabularInline):
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('title', 'client', 'category', 'is_featured', 'created_at')
+    list_display = ('title', 'client', 'category', 'order', 'is_featured', 'created_at')
+    list_editable = ('order',)
     list_filter = ('category', 'is_featured')
     search_fields = ('title', 'client')
     prepopulated_fields = {'slug': ('title',)}

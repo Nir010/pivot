@@ -18,7 +18,7 @@
       {% for notice in notices %}
       <div class="cell">
         {% if notice.image %}
-          <img src="{{ notice.image.url }}" alt="{{ notice.title }}" style="max-width:100%; height:auto; margin-bottom:16px;">
+          <img src="{{ notice.image.url }}" alt="{{ notice.title }}" style="max-width:100%; height:auto; margin-bottom:16px;" {% if forloop.first %}loading="eager"{% else %}loading="lazy"{% endif %} decoding="async">
         {% endif %}
         <h3>{{ notice.title }}</h3>
         <p>{{ notice.body|linebreaksbr }}</p>

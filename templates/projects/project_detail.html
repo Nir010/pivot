@@ -15,7 +15,7 @@
 <section class="section">
   <div class="wrap" style="max-width: 70ch;">
     {% if project.thumbnail %}
-      <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" style="max-width:100%; height:auto; margin-bottom:24px;">
+      <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" style="max-width:100%; height:auto; margin-bottom:24px;" loading="eager" decoding="async">
     {% endif %}
     <p>{{ project.summary }}</p>
     {{ project.detail|linebreaks }}
@@ -37,7 +37,7 @@
     <div style="display:flex; flex-wrap:wrap; gap:16px;">
       {% for img in project.images.all %}
         <figure style="margin:0;">
-          <img src="{{ img.image.url }}" alt="{{ img.caption|default:project.title }}" style="max-width:min(300px,100%); height:auto; display:block;">
+          <img src="{{ img.image.url }}" alt="{{ img.caption|default:project.title }}" style="max-width:min(300px,100%); height:auto; display:block;" loading="lazy" decoding="async">
           {% if img.caption %}<figcaption style="font-size:0.85rem; margin-top:4px;">{{ img.caption }}</figcaption>{% endif %}
         </figure>
       {% empty %}

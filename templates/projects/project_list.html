@@ -28,7 +28,7 @@
         <article class="cell project-card">
           <span class="cell num">{{ forloop.counter|stringformat:"02d" }}</span>
           {% if project.thumbnail %}
-            <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" style="max-width:100%; height:auto; margin:0 0 12px;">
+            <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" style="max-width:100%; height:auto; margin:0 0 12px;" {% if forloop.first %}loading="eager"{% else %}loading="lazy"{% endif %} decoding="async">
           {% endif %}
           <h3>{{ project.title }}</h3>
           <p>{{ project.summary }}</p>
@@ -52,7 +52,7 @@
         <article class="cell project-card">
           <span class="cell num">{{ forloop.counter|stringformat:"02d" }}</span>
           {% if project.thumbnail %}
-            <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" style="max-width:100%; height:auto; margin:0 0 12px;">
+            <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" style="max-width:100%; height:auto; margin:0 0 12px;" loading="lazy" decoding="async">
           {% endif %}
           <h3>{{ project.title }}</h3>
           <p>{{ project.summary }}</p>

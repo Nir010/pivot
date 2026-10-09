@@ -16,8 +16,8 @@
   <div class="wrap">
     <div class="section-head">
       <div>
-        <p class="eyebrow">Featured projects</p>
-        <h2 class="mt-0">Explore our work</h2>
+        <p class="eyebrow">Explore our work</p>
+        <h2 class="mt-0">Featured projects</h2>
         <p class="section-intro">Select a project to view its details.</p>
       </div>
     </div>
@@ -32,7 +32,7 @@
           {% endif %}
           <h3>{{ project.title }}</h3>
           <p>{{ project.summary }}</p>
-          {% if project.project_url %}<a class="read-link" href="{{ project.project_url }}" target="_blank" rel="noopener">Open live app</a>{% else %}<a class="read-link" href="{% url "project_detail" project.slug %}">View project details</a>{% endif %}
+          <a class="read-link" href="{% url "project_detail" project.slug %}">View project details</a>
         </article>
       {% endfor %}
     </div>
@@ -44,7 +44,7 @@
     <div class="section-head" style="margin-top: 48px;">
       <div>
         <p class="eyebrow">More work</p>
-        <h2 class="mt-0">All projects</h2>
+        <h2 class="mt-0">Other projects</h2>
       </div>
     </div>
     <div class="grid grid-2 project-grid">
@@ -56,7 +56,7 @@
           {% endif %}
           <h3>{{ project.title }}</h3>
           <p>{{ project.summary }}</p>
-          {% if project.project_url %}<a class="read-link" href="{{ project.project_url }}" target="_blank" rel="noopener">Open live app</a>{% else %}<a class="read-link" href="{% url "project_detail" project.slug %}">View project details</a>{% endif %}
+          <a class="read-link" href="{% url "project_detail" project.slug %}">View project details</a>
         </article>
       {% endfor %}
     </div>

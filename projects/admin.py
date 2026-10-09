@@ -21,6 +21,7 @@ class ProjectAdmin(admin.ModelAdmin):
     search_fields = ('title', 'client')
     prepopulated_fields = {'slug': ('title',)}
     inlines = [ProjectImageInline]
+    list_select_related = ('category',)
 
 
 @admin.register(ProjectImage)

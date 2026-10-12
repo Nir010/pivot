@@ -39,7 +39,11 @@
         </ul>
       </div>
     </nav>
-    {% endblock header %} {% block content %}{% endblock %} {% block footer %}
+    {% endblock header %} 
+    
+    {% block content %}
+    {% endblock %} 
+    {% block footer %}
     <footer class="site-footer">
       <div class="wrap">
         <div class="footer-grid">
@@ -96,8 +100,8 @@
       </div>
     </footer>
     {% endblock footer %}
-
     <script src="{% static 'main.js' %}?v=4" defer></script>
-    {% block extra_js %}{% endblock %}
+    {% block extra_js %}
+    {% endblock extra_js %}
   </body>
 </html>

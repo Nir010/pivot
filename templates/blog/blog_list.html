@@ -28,7 +28,7 @@
           {% if post.cover_image %}
             <div class="blog-cover"><img src="{{ post.cover_image.url }}" alt="{{ post.title }}" loading="lazy"></div>
           {% endif %}
-          <span class="index">{{ forloop.counter|stringformat:"02d" }}</span>
+          <span class="index">{{ page_obj.start_index|add:forloop.counter0|stringformat:"02d" }}</span>
           <span class="category">{{ post.category }}</span>
 
           {% if post.pdf_file %}
@@ -50,6 +50,21 @@
         <p>No insight posts yet.</p>
       {% endfor %}
     </div>
+    {% if page_obj.has_other_pages %}
+      <nav aria-label="Blog pagination">
+        {% if page_obj.has_previous %}
+          <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span>
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}">Next</a>
+        {% endif %}
+      </nav>
+    {% endif %}
   </div>
 </section>
 

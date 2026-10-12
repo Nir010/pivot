@@ -37,6 +37,9 @@ class Project(OrderedModel):
 
     class Meta:
         ordering = ['order', '-created_at', '-pk']
+        indexes = [
+            models.Index(fields=['is_featured', 'order', '-created_at']),
+        ]
 
     def __str__(self):
         return self.title

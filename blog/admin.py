@@ -9,3 +9,4 @@ class PostAdmin(admin.ModelAdmin):
     list_filter = ('category', 'is_pinned', 'is_published')
     search_fields = ('title', 'body')
     prepopulated_fields = {'slug': ('title',)}   # auto-fill slug as you type the title
+    list_select_related = ('category',)

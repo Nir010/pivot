@@ -1,9 +1,9 @@
 # Python dependencies for the Pivot Risk Django backend.
 # To install everything:  pip install -r requirements.txt
-
 Django>=5.0           # The web framework
 psycopg[binary]>=3.1  # PostgreSQL driver (lets Django talk to Postgres)
 Pillow>=10.0          # Lets Django handle ImageField uploads
 django-jazzmin        # Admin theme for Django
 python-dotenv         # For loading environment variables from a .env file
 gunicorn              # Production WSGI server (used on the VPS)
+whitenoise>=6.6       # For serving static files in production (used on the VPS)

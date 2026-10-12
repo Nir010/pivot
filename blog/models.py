@@ -35,6 +35,11 @@ class Post(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['is_published', '-is_pinned', '-created_at']),
+            models.Index(fields=['is_published', '-created_at']),
+            models.Index(fields=['slug']),
+        ]
 
     def __str__(self):
         return self.title

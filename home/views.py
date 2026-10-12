@@ -37,13 +37,12 @@ def _forward_to_formspree(name, email, organization, message):
 # The home page. Shows an important-notice popup when one is ticked.
 def home(request):  # view function
     # Fetch all active notices once; split important for popup (reduces queries)
-    active_notices = list(Notice.objects.filter(is_active=True).order_by('-created_at'))
-    important_notices = [n for n in active_notices if n.is_important]
+    active_notices = Notice.objects.filter(is_active=True).order_by('-created_at')
+    important_notices = active_notices.filter(is_important=True)
 
     # Pass them to the template under the name "notices"
     return render(request, "home/index.html", {
         "notices": important_notices,
-        "active_notices": active_notices,
     })
 
 

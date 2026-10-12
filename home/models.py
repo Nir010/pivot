@@ -49,6 +49,9 @@ class TeamMember(OrderedModel):
 
     class Meta:
         ordering = ['order', 'name']                      # sort by order, then name
+        indexes = [
+            models.Index(fields=['group', 'order', 'name']),
+        ]
 
     def __str__(self):
         return self.name
@@ -66,6 +69,9 @@ class Service(OrderedModel):
 
     class Meta:
         ordering = ['order', 'title']
+        indexes = [
+            models.Index(fields=['is_primary', 'order', 'title']),
+        ]
 
     def __str__(self):
         return self.title
@@ -84,6 +90,10 @@ class Notice(models.Model):
 
     class Meta:
         ordering = ['-created_at']                  # newest first
+        indexes = [
+            models.Index(fields=['is_active', '-created_at']),
+            models.Index(fields=['is_important', 'is_active', '-created_at']),
+        ]
 
     def __str__(self):
         return self.title

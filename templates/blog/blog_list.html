@@ -37,7 +37,7 @@
             <h3><a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a></h3>
           {% endif %}
 
-          <p>{{ post.excerpt|default:post.body|truncatewords:30 }}</p>
+          <p>{{ post.excerpt|default:""|truncatewords:30 }}</p>
           <span class="meta">Published {{ post.created_at|date:"j M Y" }}</span>
 
           {% if post.pdf_file %}

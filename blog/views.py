@@ -9,6 +9,18 @@ def blog_list(request):
         Post.objects
         .filter(is_published=True)
         .select_related("category")
+        .only(
+            "id",
+            "title",
+            "slug",
+            "excerpt",
+            "cover_image",
+            "pdf_file",
+            "is_pinned",
+            "created_at",
+            "category__id",
+            "category__name",
+        )
         .order_by("-is_pinned", "-created_at", "-pk")
     )
 

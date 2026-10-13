@@ -6,7 +6,7 @@ from django.db.migrations.executor import MigrationExecutor
 from django.test import TestCase, TransactionTestCase, override_settings
 from django.urls import reverse
 
-from .models import Service, TeamMember
+from .models import Notice, Service, TeamMember
 
 
 class OrderingTestsMixin:
@@ -177,6 +177,112 @@ class TeamMemberOrderingTests(OrderingTestsMixin, TestCase):
     other_scope = "leadership"
 
 
+class NoticeOrderingTests(TestCase):
+    def assert_order(self, titles):
+        self.assertEqual(
+            list(Notice.objects.values_list("title", "order")),
+            [(title, position) for position, title in enumerate(titles, start=1)],
+        )
+
+    def test_insert_move_append_and_delete_use_one_global_priority_list(self):
+        first = Notice.objects.create(title="First", is_important=True)
+        hidden = Notice.objects.create(title="Hidden", is_active=False)
+        Notice.objects.create(title="Last", order=99)
+        inserted = Notice.objects.create(title="Inserted", order=2)
+        self.assertEqual(first.order, 1)
+        self.assert_order(["First", "Inserted", "Hidden", "Last"])
+
+        inserted.order = 1
+        inserted.save(update_fields=["order"])
+        self.assert_order(["Inserted", "First", "Hidden", "Last"])
+
+        inserted.order = 0
+        inserted.save()
+        self.assert_order(["First", "Hidden", "Last", "Inserted"])
+
+        hidden.delete()
+        self.assert_order(["First", "Last", "Inserted"])
+
+        Notice.objects.filter(title__in=["First", "Last"]).delete()
+        self.assert_order(["Inserted"])
+
+    def test_content_save_preserves_priority_shift_from_another_notice(self):
+        Notice.objects.create(title="First")
+        Notice.objects.create(title="Second")
+        second = Notice.objects.get(title="Second")
+        Notice.objects.create(title="Inserted", order=1)
+
+        second.body = "Updated announcement"
+        second.is_important = True
+        second.save()
+
+        self.assert_order(["Inserted", "First", "Second"])
+        second.refresh_from_db()
+        self.assertEqual(second.body, "Updated announcement")
+        self.assertTrue(second.is_important)
+        self.assertEqual(second.order, 3)
+
+    def test_update_fields_without_order_preserves_position(self):
+        Notice.objects.create(title="First")
+        second = Notice.objects.create(title="Second")
+        second.order = 1
+        second.body = "Updated announcement"
+
+        second.save(update_fields=["body"])
+
+        self.assert_order(["First", "Second"])
+        second.refresh_from_db()
+        self.assertEqual(second.body, "Updated announcement")
+
+
+@override_settings(SECURE_SSL_REDIRECT=False)
+class NoticePriorityViewTests(TestCase):
+    def test_popup_and_notice_list_render_priority_before_creation_date(self):
+        hidden = Notice.objects.create(
+            title="Hidden announcement", is_active=False, is_important=True
+        )
+        older = Notice.objects.create(title="Older urgent announcement", is_important=True)
+        ordinary = Notice.objects.create(title="Ordinary announcement")
+        newer = Notice.objects.create(title="Newer routine announcement", is_important=True)
+        for notice, day in [(hidden, 4), (older, 1), (ordinary, 3), (newer, 2)]:
+            Notice.objects.filter(pk=notice.pk).update(
+                created_at=datetime(2026, 1, day, tzinfo=timezone.utc)
+            )
+
+        for url_name, expected in [
+            ("home", [older, newer]),
+            ("notices", [older, ordinary, newer]),
+        ]:
+            with self.subTest(page=url_name):
+                response = self.client.get(reverse(url_name))
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(list(response.context["notices"]), expected)
+                html = response.content.decode()
+                positions = [html.index(notice.title) for notice in expected]
+                self.assertEqual(positions, sorted(positions))
+                self.assertNotContains(response, hidden.title)
+                if url_name == "home":
+                    self.assertNotContains(response, ordinary.title)
+
+    def test_equal_priorities_use_newest_date_then_newest_id(self):
+        older = Notice.objects.create(title="Older tied priority", is_important=True)
+        newer = Notice.objects.create(title="Newer tied priority", is_important=True)
+        newest_id = Notice.objects.create(title="Newest id tied priority", is_important=True)
+        for notice, day in [(older, 1), (newer, 2), (newest_id, 2)]:
+            # Bulk updates represent tied priorities already present in the DB.
+            Notice.objects.filter(pk=notice.pk).update(
+                order=1, created_at=datetime(2026, 1, day, tzinfo=timezone.utc)
+            )
+
+        self.assertEqual(list(Notice.objects.all()), [newest_id, newer, older])
+        for url_name in ["home", "notices"]:
+            with self.subTest(page=url_name):
+                response = self.client.get(reverse(url_name))
+                self.assertEqual(
+                    list(response.context["notices"]), [newest_id, newer, older]
+                )
+
+
 @override_settings(SECURE_SSL_REDIRECT=False)
 class OrderingAdminTests(TestCase):
     def setUp(self):
@@ -252,6 +358,37 @@ class OrderingAdminTests(TestCase):
         self.assertEqual(
             list(Service.objects.filter(is_primary=False).values_list("title", "order")),
             [("Other first", 1), ("Second", 2), ("Other second", 3)],
+        )
+
+    def test_notice_list_editable_moves_rows_loaded_before_sibling_shifts(self):
+        for title in ["First", "Second", "Third", "Fourth"]:
+            Notice.objects.create(title=title)
+        url = reverse("admin:home_notice_changelist")
+        response = self.client.get(url)
+        formset = response.context["cl"].formset
+        self.assertEqual(
+            [form.instance.title for form in formset.forms],
+            ["First", "Second", "Third", "Fourth"],
+        )
+        data = {
+            "_save": "Save",
+            "form-TOTAL_FORMS": str(len(formset.forms)),
+            "form-INITIAL_FORMS": str(len(formset.forms)),
+            "form-MIN_NUM_FORMS": "0",
+            "form-MAX_NUM_FORMS": "1000",
+        }
+        positions = {"First": 4, "Second": 3, "Third": 3, "Fourth": 4}
+        for index, form in enumerate(formset.forms):
+            notice = form.instance
+            data[f"form-{index}-id"] = str(notice.pk)
+            data[f"form-{index}-order"] = str(positions[notice.title])
+
+        response = self.client.post(url, data)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            list(Notice.objects.values_list("title", "order")),
+            [("Third", 1), ("Fourth", 2), ("Second", 3), ("First", 4)],
         )
 
 
@@ -346,3 +483,50 @@ class OrderingMigrationTests(TransactionTestCase):
                     list(positions),
                     [(pk, position) for position, pk in enumerate(original_ids, start=1)],
                 )
+
+
+class NoticeOrderingMigrationTests(TransactionTestCase):
+    migrate_from = [("home", "0018_notice_home_notice_is_acti_7bfa2e_idx_and_more")]
+    migrate_to = [("home", "0019_notice_order")]
+
+    def setUp(self):
+        executor = MigrationExecutor(connection)
+        executor.migrate(self.migrate_from)
+        self.old_apps = executor.loader.project_state(self.migrate_from).apps
+        self.old_apps.get_model("home", "Notice").objects.all().delete()
+
+    def tearDown(self):
+        executor = MigrationExecutor(connection)
+        executor.migrate(executor.loader.graph.leaf_nodes())
+        super().tearDown()
+
+    def test_existing_notice_priority_preserves_newest_first_order_and_uploads(self):
+        old_notice = self.old_apps.get_model("home", "Notice")
+        for title, day, active, important in [
+            ("Older urgent", 1, True, True),
+            ("Newer ordinary", 2, True, False),
+            ("Newest id tied", 2, True, True),
+            ("Newest hidden", 3, False, True),
+        ]:
+            notice = old_notice.objects.create(
+                title=title,
+                body=f"Body for {title}",
+                image=f"notices/{day}.png",
+                pdf_file=f"notices/pdfs/{day}.pdf",
+                is_active=active,
+                is_important=important,
+            )
+            old_notice.objects.filter(pk=notice.pk).update(
+                created_at=datetime(2026, 1, day, tzinfo=timezone.utc)
+            )
+        fields = ["pk", "title", "body", "image", "pdf_file", "is_active", "is_important", "created_at"]
+        expected = list(old_notice.objects.order_by("-created_at", "-pk").values_list(*fields))
+
+        executor = MigrationExecutor(connection)
+        executor.migrate(self.migrate_to)
+        new_notice = executor.loader.project_state(self.migrate_to).apps.get_model("home", "Notice")
+
+        self.assertEqual(
+            list(new_notice.objects.values_list(*fields, "order")),
+            [(*row, position) for position, row in enumerate(expected, start=1)],
+        )

@@ -39,7 +39,7 @@ def home(request):  # view function
     important_notices = Notice.objects.filter(
         is_active=True,
         is_important=True,
-    ).order_by("-created_at")
+    ).order_by("order", "-created_at", "-pk")
 
     # Pass them to the template under the name "notices"
     return render(request, "home/index.html", {
@@ -102,5 +102,5 @@ def contact(request):
 
 
 def notices_list(request):
-    notices = Notice.objects.filter(is_active=True).order_by('-created_at')
+    notices = Notice.objects.filter(is_active=True).order_by('order', '-created_at', '-pk')
     return render(request, 'home/notices.html', {'notices': notices})

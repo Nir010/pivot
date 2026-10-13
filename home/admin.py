@@ -13,9 +13,11 @@ class TeamMemberAdmin(admin.ModelAdmin):
 
 @admin.register(Notice)
 class NoticeAdmin(admin.ModelAdmin):
-    list_display = ('title', 'is_active', 'is_important', 'created_at')
+    list_display = ('title', 'order', 'is_active', 'is_important', 'created_at')
     list_filter = ('is_active', 'is_important')
+    list_editable = ('order',)
     search_fields = ('title', 'body')
+    ordering = ('order', '-created_at', '-pk')
 admin.site.register(SocialLink)
 
 # A "ModelAdmin" lets us customise HOW it's listed in the admin.

@@ -130,9 +130,12 @@ def lock_before_ordered_delete(sender, instance, using, **kwargs):
     lock_ordering(sender, using)
     current = (
         sender._base_manager.using(using).select_for_update()
-        .filter(pk=instance.pk).values(*sender.ordering_scope).first()
+        .filter(pk=instance.pk).values('pk', *sender.ordering_scope).first()
     )
-    instance._deletion_scope = current
+    instance._deletion_scope = (
+        {field: current[field] for field in sender.ordering_scope}
+        if current is not None else None
+    )
 
 
 def close_ordered_gap(sender, instance, using, **kwargs):

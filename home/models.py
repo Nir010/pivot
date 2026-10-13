@@ -79,20 +79,21 @@ class Service(OrderedModel):
 
 # MODEL 4:
 # One row per notice/announcement, e.g. shown on the home page.
-class Notice(models.Model):
+class Notice(OrderedModel):
     title = models.CharField(max_length=200)
     body = models.TextField(blank=True)
     image = models.ImageField(upload_to='notices/', blank=True, null=True)
     pdf_file = models.FileField(upload_to='notices/pdfs/', blank=True, null=True)
     is_active = models.BooleanField(default=True)   # show it or not
     is_important = models.BooleanField(default=False)  # if True, shows as a home-page popup
+    order = models.PositiveIntegerField(default=0, help_text=ORDER_HELP_TEXT)
     created_at = models.DateTimeField(auto_now_add=True)  # set once, on creation
 
     class Meta:
-        ordering = ['-created_at']                  # newest first
+        ordering = ['order', '-created_at', '-pk']  # lower positions appear first
         indexes = [
-            models.Index(fields=['is_active', '-created_at']),
-            models.Index(fields=['is_important', 'is_active', '-created_at']),
+            models.Index(fields=['is_active', 'order', '-created_at']),
+            models.Index(fields=['is_important', 'is_active', 'order', '-created_at']),
         ]
 
     def __str__(self):

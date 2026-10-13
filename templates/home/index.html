@@ -1,4 +1,3 @@
-```django
 {% extends "base.html" %}
 {% load static %}
 
@@ -115,7 +114,7 @@
 <div class="modal" id="notice-modal" aria-hidden="true">
   <div class="modal-overlay" data-notice-close></div>
 
-  <div class="modal-card" role="dialog" aria-modal="true"
+  <div class="modal-card modal-notices" role="dialog" aria-modal="true"
        aria-labelledby="notice-modal-title">
     <button type="button" class="modal-close"
             data-notice-close aria-label="Close">
@@ -125,8 +124,25 @@
     <h3 class="modal-title" id="notice-modal-title">Announcements</h3>
 
     {% for notice in notices %}
-      <p><strong>{{ notice.title }}</strong></p>
-      <p>{{ notice.body|linebreaksbr }}</p>
+      <article class="notice-item">
+        <h4>{{ notice.title }}</h4>
+        {% if notice.image %}
+          <a class="notice-image-link" href="{{ notice.image.url }}"
+             target="_blank" rel="noopener"
+             aria-label="Open image for {{ notice.title }} in a new tab">
+            <img class="notice-image" src="{{ notice.image.url }}"
+                 alt="{{ notice.title }}" decoding="async">
+          </a>
+        {% endif %}
+        {% if notice.body %}
+          <p>{{ notice.body|linebreaksbr }}</p>
+        {% endif %}
+        {% if notice.pdf_file %}
+          <a class="btn btn-solid" href="{{ notice.pdf_file.url }}"
+             target="_blank" rel="noopener"
+             aria-label="View PDF for {{ notice.title }} in a new tab">View PDF</a>
+        {% endif %}
+      </article>
     {% endfor %}
   </div>
 </div>
@@ -174,4 +190,3 @@
 {% block footer %}
 {{ block.super }}
 {% endblock footer %}
-```

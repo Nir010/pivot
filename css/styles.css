@@ -578,6 +578,12 @@ background: linear-gradient(160deg, var(--deep-blue), var(--brand-blue));  margi
   outline-offset: 1px;
 }
 .field textarea{ resize: vertical; min-height: 130px; }
+.field-error{
+  margin: 6px 0 0;
+  color: var(--brand-red);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
 .form-error{
   position: fixed;
   top: 24px;

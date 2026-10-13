@@ -35,19 +35,26 @@
         {% csrf_token %}
         <div class="field">
           <label for="name">Full name</label>
-          <input type="text" id="name" name="name" autocomplete="name" required>
+          <input type="text" id="name" name="name" autocomplete="name"
+                 value="{{ form.name.value|default:'' }}" required>
+          {% if form.name.errors %}<p class="field-error">{{ form.name.errors.0 }}</p>{% endif %}
         </div>
         <div class="field">
           <label for="email">Email</label>
-          <input type="email" id="email" name="email" autocomplete="email" required>
+          <input type="email" id="email" name="email" autocomplete="email"
+                 value="{{ form.email.value|default:'' }}" required>
+          {% if form.email.errors %}<p class="field-error">{{ form.email.errors.0 }}</p>{% endif %}
         </div>
         <div class="field">
           <label for="organization">Organization</label>
-          <input type="text" id="organization" name="organization" autocomplete="organization">
+          <input type="text" id="organization" name="organization" autocomplete="organization"
+                 value="{{ form.organization.value|default:'' }}">
+          {% if form.organization.errors %}<p class="field-error">{{ form.organization.errors.0 }}</p>{% endif %}
         </div>
         <div class="field">
           <label for="message">What are you weighing up?</label>
-          <textarea id="message" name="message" required></textarea>
+          <textarea id="message" name="message" required>{{ form.message.value|default:'' }}</textarea>
+          {% if form.message.errors %}<p class="field-error">{{ form.message.errors.0 }}</p>{% endif %}
         </div>
         <button type="submit" class="btn btn-solid">Send message</button>
       </form>

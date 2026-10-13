@@ -48,20 +48,21 @@ def team(request):
 def contact(request):
     if request.method == "POST":
         form = ContactForm(request.POST)
-        if not form.is_valid():
-            messages.error(request, "Please fill in your name and a valid email.")
+        if form.is_valid():
+            cd = form.cleaned_data
+            # Save the message; the browser also forwards it to Formspree.
+            ContactMessage.objects.create(
+                name=cd["name"], email=cd["email"],
+                organization=cd["organization"], message=cd["message"],
+            )
+            messages.success(request, "Thanks — your message has been sent.")
             return redirect("contact")
+        # Invalid: re-render with the errors + typed values (don't redirect).
+        messages.error(request, "Please correct the highlighted fields below.")
+    else:
+        form = ContactForm()
 
-        cd = form.cleaned_data
-        # Save the message; the browser also forwards it to Formspree.
-        ContactMessage.objects.create(
-            name=cd["name"], email=cd["email"],
-            organization=cd["organization"], message=cd["message"],
-        )
-        messages.success(request, "Thanks — your message has been sent.")
-        return redirect("contact")
-
-    return render(request, "home/contact.html")
+    return render(request, "home/contact.html", {"form": form})
 
 
 def notices_list(request):

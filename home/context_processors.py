@@ -5,16 +5,16 @@ from django.dispatch import receiver
 from .models import SiteSettings
 
 CACHE_KEY = "site_settings:1"
+# LocMemCache is per-process, so a save only clears the worker that handled the
+# edit. A finite timeout bounds how long any other worker can serve stale data.
+CACHE_TIMEOUT = 300  # seconds
 
 
 def site_settings(request):
     settings = cache.get(CACHE_KEY)
     if settings is None:
-        try:
-            settings = SiteSettings.objects.get(pk=1)
-        except SiteSettings.DoesNotExist:
-            settings = None
-        cache.set(CACHE_KEY, settings, None)  # cache indefinitely
+        settings = SiteSettings.objects.filter(pk=1).first()
+        cache.set(CACHE_KEY, settings, CACHE_TIMEOUT)
     return {"settings": settings}
 
 

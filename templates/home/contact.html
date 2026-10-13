@@ -104,6 +104,7 @@
         const data = new FormData();
         data.append("name", form.querySelector("#name")?.value || "");
         data.append("email", email ? email.value : "");
+        data.append("organization", form.querySelector("#organization")?.value || "");
         data.append("message", form.querySelector("#message")?.value || "");
         data.append("_subject", "New contact message from Pivot Risk website");
         data.append("_replyto", email ? email.value : "");

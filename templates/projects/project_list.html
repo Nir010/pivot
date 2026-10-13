@@ -26,7 +26,7 @@
     <div class="grid grid-2 project-grid">
       {% for project in featured_projects %}
         <article class="cell project-card">
-          <span class="cell num">{{ forloop.counter|stringformat:"02d" }}</span>
+          <span class="num">{{ forloop.counter|stringformat:"02d" }}</span>
           {% if project.thumbnail %}
             <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" style="max-width:100%; height:auto; margin:0 0 12px;" {% if forloop.first %}loading="eager"{% else %}loading="lazy"{% endif %} decoding="async">
           {% endif %}
@@ -50,7 +50,7 @@
     <div class="grid grid-2 project-grid">
       {% for project in other_projects %}
         <article class="cell project-card">
-          <span class="cell num">{{ forloop.counter|stringformat:"02d" }}</span>
+          <span class="num">{{ forloop.counter|stringformat:"02d" }}</span>
           {% if project.thumbnail %}
             <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" style="max-width:100%; height:auto; margin:0 0 12px;" loading="lazy" decoding="async">
           {% endif %}

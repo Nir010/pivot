@@ -2,37 +2,6 @@ from django.contrib import messages
 from django.shortcuts import (redirect,render,)  # fills a template with data and returns an HTTP response
 from .models import (Notice, Service, ContactMessage, TeamMember)  # imports models.py within the same app
 from .forms import ContactForm
-import urllib.parse
-import urllib.request
-import threading
-
-FORMSPREE_ENDPOINTS = [
-    "https://formspree.io/f/maenjyzw",
-    "https://formspree.io/f/xzezgzql",
-]
-
-def _forward_to_formspree(name, email, organization, message):
-    payload = urllib.parse.urlencode({
-        "name": name,
-        "email": email,
-        "org": organization,
-        "message": message,
-        "_subject": f"Pivot Risk contact form: {name}",
-        "_replyto": email,
-    }).encode()
-    for url in FORMSPREE_ENDPOINTS:
-        try:
-            req = urllib.request.Request(
-                url,
-                data=payload,
-                headers={
-                    "Accept": "application/json",
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-            )
-            urllib.request.urlopen(req, timeout=3)
-        except Exception:
-            continue  # try the next endpoint; give up silently
 
 # The home page. Shows an important-notice popup when one is ticked.
 def home(request):  # view function
@@ -84,17 +53,11 @@ def contact(request):
             return redirect("contact")
 
         cd = form.cleaned_data
-        # 1) Always save to the database
+        # Save the message; the browser also forwards it to Formspree.
         ContactMessage.objects.create(
             name=cd["name"], email=cd["email"],
             organization=cd["organization"], message=cd["message"],
         )
-        # 2) Best-effort forward to Formspree.
-        threading.Thread(
-            target=_forward_to_formspree,
-            args=(cd["name"], cd["email"], cd["organization"], cd["message"]),
-            daemon=True,
-        ).start()
         messages.success(request, "Thanks — your message has been sent.")
         return redirect("contact")
 

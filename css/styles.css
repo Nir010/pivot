@@ -18,7 +18,7 @@
   --serif: 'Fraunces', Georgia, serif;
   --sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-  --maxw: min(1240px, 100%);
+  --maxw: 100%;
   --gutter: clamp(20px, 5vw, 72px);
 }
 

@@ -1,7 +1,20 @@
+import logging
+
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import (redirect,render,)  # fills a template with data and returns an HTTP response
 from .models import (Notice, Service, ContactMessage, TeamMember)  # imports models.py within the same app
 from .forms import ContactForm
+
+logger = logging.getLogger(__name__)
+
+
+def _wants_json(request):
+    """True when the request came from our fetch() handler (AJAX)."""
+    return (
+        request.headers.get("x-requested-with") == "XMLHttpRequest"
+        or "application/json" in request.headers.get("accept", "")
+    )
 
 # The home page. Shows an important-notice popup when one is ticked.
 def home(request):  # view function
@@ -55,9 +68,19 @@ def contact(request):
                 name=cd["name"], email=cd["email"],
                 organization=cd["organization"], message=cd["message"],
             )
+            logger.info("Contact message saved from %s <%s>", cd["name"], cd["email"])
+            if _wants_json(request):
+                return JsonResponse({"ok": True, "message": "Thanks — your message has been sent."})
             messages.success(request, "Thanks — your message has been sent.")
             return redirect("contact")
         # Invalid: re-render with the errors + typed values (don't redirect).
+        logger.warning("Invalid contact submission: %s", form.errors.as_json())
+        if _wants_json(request):
+            errors = {
+                field: [entry["message"] for entry in entries]
+                for field, entries in form.errors.get_json_data().items()
+            }
+            return JsonResponse({"ok": False, "errors": errors}, status=400)
         messages.error(request, "Please correct the highlighted fields below.")
     else:
         form = ContactForm()

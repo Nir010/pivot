@@ -29,10 +29,18 @@
         {% endfor %}
       {% endif %}
 
+      {# Live status for the AJAX submit (errors / success) #}
+      <p id="contact-status" class="contact-status" role="status" aria-live="polite"></p>
+
       {# Form posts to Django (saves to DB) and fires Formspree from the browser #}
       <form id="contact-form" action="{% url 'contact' %}" method="POST"
             data-formspree="https://formspree.io/f/maenjyzw,https://formspree.io/f/xzezgzql">
         {% csrf_token %}
+        {# Honeypot: hidden from people, tempting to bots. Must stay empty. #}
+        <p class="hp-field" aria-hidden="true">
+          <label for="website">Website</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+        </p>
         <div class="field">
           <label for="name">Full name</label>
           <input type="text" id="name" name="name" autocomplete="name"
@@ -96,36 +104,100 @@
 
 {% block extra_js %}
 <script>
-  // Deliver the message through Formspree from the browser (Formspree blocks
-  // server-side requests), while the normal POST still saves it in Django.
+  // Progressive enhancement: submit over fetch() so errors show inline without
+  // losing what was typed. If fetch fails, fall back to the normal form POST.
+  // The message is also delivered through Formspree from the browser
+  // (Formspree blocks server-side requests); Django still saves it in the DB.
   (function () {
     const form = document.querySelector("#contact-form");
-    if (form) {
-      const endpoints = (form.dataset.formspree || "")
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean);
+    if (!form) return;
 
-      form.addEventListener("submit", function () {
-        const email = form.querySelector("#email");
-        const data = new FormData();
-        data.append("name", form.querySelector("#name")?.value || "");
-        data.append("email", email ? email.value : "");
-        data.append("organization", form.querySelector("#organization")?.value || "");
-        data.append("message", form.querySelector("#message")?.value || "");
-        data.append("_subject", "New contact message from Pivot Risk website");
-        data.append("_replyto", email ? email.value : "");
+    const status = document.getElementById("contact-status");
+    const endpoints = (form.dataset.formspree || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
 
-        endpoints.forEach((url) => {
-          fetch(url, {
-            method: "POST",
-            body: data,
-            headers: { Accept: "application/json" },
-            keepalive: true,
-          }).catch(() => {});
-        });
+    function setStatus(text, kind) {
+      if (!status) return;
+      status.textContent = text;
+      if (kind) status.dataset.kind = kind;
+      else delete status.dataset.kind;
+    }
+
+    function clearErrors() {
+      form.querySelectorAll(".field-error[data-client]").forEach((el) => el.remove());
+      form.querySelectorAll("[aria-invalid]").forEach((el) => el.removeAttribute("aria-invalid"));
+      form.querySelectorAll(".field-invalid").forEach((el) => el.classList.remove("field-invalid"));
+    }
+
+    function showErrors(errors) {
+      let first = null;
+      Object.keys(errors).forEach((field) => {
+        const input = form.querySelector("#" + field);
+        const wrap = input ? input.closest(".field") : null;
+        if (!input || !wrap) return;
+        input.setAttribute("aria-invalid", "true");
+        wrap.classList.add("field-invalid");
+        const p = document.createElement("p");
+        p.className = "field-error";
+        p.dataset.client = "1";
+        p.textContent = errors[field][0];
+        wrap.appendChild(p);
+        if (!first) first = input;
+      });
+      if (first) first.focus();
+    }
+
+    function sendToFormspree() {
+      const email = form.querySelector("#email");
+      const data = new FormData();
+      data.append("name", form.querySelector("#name")?.value || "");
+      data.append("email", email ? email.value : "");
+      data.append("organization", form.querySelector("#organization")?.value || "");
+      data.append("message", form.querySelector("#message")?.value || "");
+      data.append("_subject", "New contact message from Pivot Risk website");
+      data.append("_replyto", email ? email.value : "");
+
+      endpoints.forEach((url) => {
+        fetch(url, {
+          method: "POST",
+          body: data,
+          headers: { Accept: "application/json" },
+          keepalive: true,
+        }).catch((err) => console.warn("Formspree delivery failed", err));
       });
     }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      clearErrors();
+      setStatus("Sending…", "");
+
+      fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+          Accept: "application/json",
+        },
+      })
+        .then((res) => res.json().then((json) => ({ res, json })))
+        .then(({ res, json }) => {
+          if (res.ok && json.ok) {
+            setStatus(json.message || "Thanks — your message has been sent.", "success");
+            sendToFormspree();
+            form.reset();
+          } else {
+            showErrors(json.errors || {});
+            setStatus("Please correct the highlighted fields below.", "error");
+          }
+        })
+        .catch((err) => {
+          console.warn("Contact submit failed, falling back to normal POST", err);
+          form.submit();
+        });
+    });
 
     // Auto-hide the one-time success message after a few seconds.
     const toasts = document.querySelectorAll("[data-form-toast]");

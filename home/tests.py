@@ -6,6 +6,8 @@ from django.db.migrations.executor import MigrationExecutor
 from django.test import TestCase, TransactionTestCase, override_settings
 from django.urls import reverse
 
+from blog.models import Category, Post
+from projects.models import Project, ProjectCategory
 from .models import Notice, Service, TeamMember
 
 
@@ -530,3 +532,92 @@ class NoticeOrderingMigrationTests(TransactionTestCase):
             list(new_notice.objects.values_list(*fields, "order")),
             [(*row, position) for position, row in enumerate(expected, start=1)],
         )
+
+
+@override_settings(SITE_URL="https://example.test", SECURE_SSL_REDIRECT=False)
+class SeoEndpointTests(TestCase):
+    def test_page_metadata_has_description_and_canonical_url(self):
+        response = self.client.get(reverse("about"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '<meta name="description"')
+        self.assertContains(
+            response,
+            '<link rel="canonical" href="https://example.test/about/"',
+        )
+        self.assertContains(response, '<meta property="og:title"')
+        self.assertContains(response, '<meta name="twitter:card"')
+
+    def test_detail_pages_use_content_for_metadata(self):
+        category = Category.objects.create(name="Research", slug="research")
+        post = Post.objects.create(
+            category=category,
+            title="Risk insight",
+            slug="risk-insight",
+            excerpt="A useful article summary.",
+            body="Full article content.",
+        )
+        project_category = ProjectCategory.objects.create(
+            name="Advisory", slug="advisory"
+        )
+        project = Project.objects.create(
+            category=project_category,
+            title="Risk review",
+            slug="risk-review",
+            summary="A useful project summary.",
+        )
+
+        post_response = self.client.get(reverse("blog_detail", args=[post.slug]))
+        project_response = self.client.get(
+            reverse("project_detail", args=[project.slug])
+        )
+
+        self.assertContains(post_response, "Risk insight — Pivot Risk")
+        self.assertContains(post_response, "A useful article summary.")
+        self.assertContains(project_response, "Risk review — Pivot Risk")
+        self.assertContains(project_response, "A useful project summary.")
+
+    def test_sitemap_lists_public_content_only(self):
+        category = Category.objects.create(name="Research", slug="research")
+        Post.objects.create(
+            category=category,
+            title="Published insight",
+            slug="published-insight",
+            body="Published",
+            is_published=True,
+        )
+        Post.objects.create(
+            category=category,
+            title="Draft insight",
+            slug="draft-insight",
+            body="Draft",
+            is_published=False,
+        )
+        project_category = ProjectCategory.objects.create(
+            name="Advisory", slug="advisory"
+        )
+        Project.objects.create(
+            category=project_category,
+            title="Listed project",
+            slug="listed-project",
+        )
+
+        response = self.client.get(reverse("sitemap"))
+        content = response.content.decode()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "application/xml")
+        self.assertIn(
+            "https://example.test/blog/published-insight/",
+            content,
+        )
+        self.assertIn("https://example.test/projects/listed-project/", content)
+        self.assertNotIn("draft-insight", content)
+
+    def test_robots_points_crawlers_to_sitemap(self):
+        response = self.client.get(reverse("robots"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "text/plain")
+        self.assertContains(response, "Disallow: /admin/")
+        self.assertContains(response, "Sitemap: https://example.test/sitemap.xml")

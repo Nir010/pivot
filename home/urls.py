@@ -8,4 +8,6 @@ urlpatterns = [
     path("team/", views.team, name="team"),
     path("notices/", views.notices_list, name="notices"),
     path("contact/", views.contact, name="contact"),
+    path("sitemap.xml", views.sitemap, name="sitemap"),
+    path("robots.txt", views.robots, name="robots"),
 ]

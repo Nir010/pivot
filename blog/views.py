@@ -1,5 +1,7 @@
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
+from django.utils.html import strip_tags
+from django.utils.text import Truncator
 from .models import Post
 
 # Blog listing: pinned posts first, then newest first.
@@ -40,4 +42,13 @@ def blog_list(request):
 # A single post, addressed by its slug in the URL (e.g. /blog/my-article/).
 def blog_detail(request, slug):
     post = get_object_or_404(Post.objects.select_related('category'), slug=slug, is_published=True)
-    return render(request, 'blog/blog_detail.html', {'post': post})
+    description = Truncator(strip_tags(post.excerpt or post.body)).chars(160)
+    return render(
+        request,
+        'blog/blog_detail.html',
+        {
+            'post': post,
+            'seo_title': f'{post.title} — Pivot Risk',
+            'seo_description': description,
+        },
+    )

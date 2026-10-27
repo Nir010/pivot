@@ -1,10 +1,14 @@
 import logging
 
 from django.contrib import messages
-from django.http import JsonResponse
+from django.conf import settings
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import (redirect,render,)  # fills a template with data and returns an HTTP response
+from django.urls import reverse
 from .models import (Notice, Service, ContactMessage, TeamMember)  # imports models.py within the same app
 from .forms import ContactForm
+from blog.models import Post
+from projects.models import Project
 
 logger = logging.getLogger(__name__)
 
@@ -91,3 +95,41 @@ def contact(request):
 def notices_list(request):
     notices = Notice.objects.filter(is_active=True).order_by('order', '-created_at', '-pk')
     return render(request, 'home/notices.html', {'notices': notices})
+
+
+def sitemap(request):
+    paths = [
+        reverse(name)
+        for name in (
+            "home",
+            "about",
+            "services",
+            "team",
+            "notices",
+            "contact",
+            "blog_list",
+            "project_list",
+        )
+    ]
+    paths.extend(
+        reverse("blog_detail", args=[post.slug])
+        for post in Post.objects.filter(is_published=True).only("slug")
+    )
+    paths.extend(
+        reverse("project_detail", args=[project.slug])
+        for project in Project.objects.only("slug")
+    )
+    return render(
+        request,
+        "home/sitemap.xml",
+        {"site_url": settings.SITE_URL, "paths": paths},
+        content_type="application/xml",
+    )
+
+
+def robots(request):
+    sitemap_url = f"{settings.SITE_URL}{reverse('sitemap')}"
+    return HttpResponse(
+        f"User-agent: *\nAllow: /\nDisallow: /admin/\nSitemap: {sitemap_url}\n",
+        content_type="text/plain",
+    )

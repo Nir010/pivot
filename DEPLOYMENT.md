@@ -203,6 +203,7 @@ and secrets, and is loaded by `python-dotenv` in `settings.py`.
 ```bash
 DJANGO_DEBUG=False
 ALLOWED_HOSTS=pivotrisks.com,www.pivotrisks.com
+SITE_URL=https://pivotrisks.com
 SECRET_KEY=YOUR_SECRET_KEY
 DB_NAME=pivot
 DB_USER=pivot_user
@@ -216,6 +217,7 @@ TIME_ZONE=Asia/Kathmandu
 |----------|---------|
 | `DJANGO_DEBUG` | `False` in production. Turns off debug pages and enables HTTPS/HSTS/secure cookies. |
 | `ALLOWED_HOSTS` | Comma-separated domains Django will answer for (blocks Host-header attacks). |
+| `SITE_URL` | Public canonical site origin, without a trailing slash; used by SEO metadata, sitemap, and robots.txt. |
 | `SECRET_KEY` | Cryptographic key for sessions/CSRF. Must be secret and unique. |
 | `DB_*` | PostgreSQL connection details (must match step 4). |
 | `TIME_ZONE` | Server-side timezone used by Django. |

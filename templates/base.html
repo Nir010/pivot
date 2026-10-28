@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="{% static 'styles.css' %}?v=10" />
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
     {% block header %}
     <nav class="site-nav">
       <div class="wrap">
@@ -52,8 +53,10 @@
     </nav>
     {% endblock header %} 
     
+    <main id="main" tabindex="-1">
     {% block content %}
-    {% endblock %} 
+    {% endblock %}
+    </main>
     {% block footer %}
     <footer class="site-footer">
       <div class="wrap">

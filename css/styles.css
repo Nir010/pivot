@@ -492,6 +492,9 @@ background: linear-gradient(160deg, var(--deep-blue), var(--brand-blue));  margi
 /* Team profile popup */
 .modal-team{
   max-width: 620px;
+  max-height: 92vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 .team-profile-head{
   display: flex;
@@ -654,7 +657,7 @@ background: linear-gradient(160deg, var(--deep-blue), var(--brand-blue));  margi
 /* ---------- Footer ---------- */
 .site-footer{
   background: linear-gradient(110deg, var(--brand-red) 0%, var(--brand-red) 25%, var(--brand-blue) 62%, var(--deep-blue) 100%);
-  color: var(--text);
+  color: var(--white);
   padding: 0;
 }
 .site-footer .wrap{
@@ -679,8 +682,8 @@ background: linear-gradient(160deg, var(--deep-blue), var(--brand-blue));  margi
   gap: 40px;
   margin-bottom: 40px;
 }
-.site-footer h3{ color: navy; font-size: 2rem; }
-.site-footer p, .site-footer a{ color: var(--text); }
+.site-footer h3{ color: var(--white); font-size: 2rem; }
+.site-footer p, .site-footer a{ color: var(--white); }
 .footer-dept{ font-weight: 600; }
 .site-footer a:hover{ color: var(--white); text-decoration: underline; text-underline-offset: 3px; }
 .footer-links{ list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; overflow-wrap: anywhere; }
@@ -692,7 +695,7 @@ background: linear-gradient(160deg, var(--deep-blue), var(--brand-blue));  margi
   flex-wrap: wrap;
   gap: 10px;
   font-size: 0.8rem;
-  color: var(--text);
+  color: var(--white);
 }
 
 /* ---------- Page header (non-home pages) ---------- */
@@ -724,7 +727,11 @@ background: linear-gradient(160deg, var(--deep-blue), var(--brand-blue));  margi
   z-index: 1;
 }
 .page-head .wrap{ animation: contentRise 0.75s ease-out both; }
-.page-head .eyebrow{ color: var(--brand-red); font-size: 2rem; font-weight: 500; margin-bottom: 10px; }
+.page-head .eyebrow{ color: var(--brand-red); font-size: 1rem; font-weight: 500; margin-bottom: 10px; }
+.page-head h1{ font-size: clamp(1.9rem, 5vw, 4.6rem); }
+@media (max-width: 640px){
+  .page-head h1{ font-size: clamp(1.6rem, 6.5vw, 2.2rem); }
+}
 
 /* ---------- Projects ---------- */
 .section-intro{ max-width: 34ch; color: var(--text); margin: 0; }
@@ -990,6 +997,22 @@ background: linear-gradient(160deg, var(--deep-blue), var(--brand-blue));  margi
 .mt-0{ margin-top: 0; }
 .is-hidden{ display: none; }
 #more-services{ scroll-margin-top: 100px; }
+/* Skip link for keyboard/screen-reader users */
+.skip-link{
+  position: absolute;
+  left: -999px;
+  top: 0;
+  z-index: 200;
+  padding: 10px 16px;
+  background: hwb(54 0% 0%);
+  color: var(--text);
+  font-weight: 600;
+  border: 2px solid var(--text);
+}
+.skip-link:focus{
+  left: 12px;
+  top: 12px;
+}
 .visually-hidden{
   position: absolute; width: 1px; height: 1px; overflow: hidden;
   clip: rect(0 0 0 0); white-space: nowrap;
@@ -997,7 +1020,7 @@ background: linear-gradient(160deg, var(--deep-blue), var(--brand-blue));  margi
 
 /* ---------- Focus visibility ---------- */
 a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
-  outline: 2px solid var(--brand-red);
+  outline: 2px solid var(--text);
   outline-offset: 2px;
 }
 

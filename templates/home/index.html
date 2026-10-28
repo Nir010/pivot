@@ -121,7 +121,7 @@
       &times;
     </button>
 
-    <h3 class="modal-title" id="notice-modal-title">Announcements</h3>
+    <h2 class="modal-title" id="notice-modal-title">Announcements</h2>
 
     {% for notice in notices %}
       <article class="notice-item">
@@ -156,17 +156,42 @@
   document.addEventListener("DOMContentLoaded", function () {
     const modal = document.querySelector("#notice-modal");
     if (!modal) return;
+    const dialog = modal.querySelector("[role=dialog]");
+    const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+    let focusable = [];
+    let first = null;
+    let last = null;
+    let previouslyFocused = null;
+
+    function trap(e) {
+      if (e.key !== "Tab" || !focusable.length) return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    }
 
     // Open the popup.
+    previouslyFocused = document.activeElement;
     modal.classList.add("open");
     modal.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
+    if (dialog) {
+      focusable = Array.from(dialog.querySelectorAll(focusableSelector)).filter(el => !el.hasAttribute('disabled'));
+      first = focusable[0];
+      last = focusable[focusable.length - 1];
+      (first || dialog.querySelector('.modal-close'))?.focus();
+      document.addEventListener("keydown", trap);
+    }
 
     // Close the popup and restore scrolling.
     function closeModal() {
       modal.classList.remove("open");
       modal.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
+      document.removeEventListener("keydown", trap);
+      if (previouslyFocused && typeof previouslyFocused.focus === "function") previouslyFocused.focus();
     }
 
     // Close with the X button or the dimmed background.
@@ -180,6 +205,8 @@
     document.addEventListener("keydown", function (event) {
       if (event.key === "Escape") {
         closeModal();
+      } else if (event.key === "Tab" && modal.classList.contains("open")) {
+        trap(event);
       }
     });
   });

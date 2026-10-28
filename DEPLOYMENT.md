@@ -156,8 +156,8 @@ pip install -r requirements.txt
 
 ## 4. PostgreSQL — database + app role
 
-Create a dedicated role and database. The app should **not** connect as the
-`postgres` superuser: if the app is compromised, a limited role can only touch
+Create a dedicated, least-privilege role for the app. **Do not** run Django as
+the `postgres` superuser — if the app is compromised, the role can only touch
 its own database.
 
 ```bash
@@ -178,6 +178,10 @@ ALTER ROLE pivot_user SET timezone TO 'Asia/Kathmandu';
 GRANT ALL ON SCHEMA public TO pivot_user;
 \q
 ```
+
+> **Least privilege:** `pivot_user` owns `pivot` and has `ALL` on `public`. It
+> should have **no superuser** and **no** access to other databases. If you ever
+> need to rotate the password, do it here and update `.env`.
 
 | Statement | What it does |
 |-----------|--------------|
@@ -528,12 +532,18 @@ sudo certbot --nginx -d pivotrisks.com -d www.pivotrisks.com
 
 ## 12. Backups (do this regularly)
 
-Store the DB password for non-interactive dumps, then schedule nightly backups.
+Back up the database and uploaded media. Keep backups **off the server** if
+possible (copy to another machine/object storage). Only ever dump as
+`pivot_user` (not as `postgres`).
+
+Store the DB password for non-interactive dumps:
 
 ```bash
 echo '127.0.0.1:5432:pivot:pivot_user:strong-app-password' > ~/.pgpass
 chmod 600 ~/.pgpass
 ```
+
+Create a backup folder and schedule daily jobs:
 
 ```bash
 sudo mkdir -p /var/backups/pivot
@@ -543,9 +553,15 @@ crontab -e
 Add these lines:
 
 ```cron
+# Daily DB dump at 03:00
 0 3 * * * pg_dump -h 127.0.0.1 -U pivot_user pivot | gzip > /var/backups/pivot/db_$(date +\%F).sql.gz
+# Daily media sync at 04:00
 0 4 * * * rsync -a /var/www/pivot/media/ /var/backups/pivot/media/
 ```
+
+> **Tips:** test a restore on a throwaway database regularly. If you need a full
+> off-server copy, `scp`/`rsync` the gzipped dump and the media folder. Keep
+> `.pgpass` readable only by the `deployer` user.
 
 - `~/.pgpass` lets `pg_dump` authenticate without a password prompt (format:
   host:port:database:user:password). Keep it `chmod 600`.

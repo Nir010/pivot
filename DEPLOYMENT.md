@@ -273,6 +273,11 @@ python manage.py createsuperuser
 This is the step that is most often skipped, and the reason a new deployment can
 look empty. Do **both** 7a and 7b.
 
+> **Images:** prefer compressed originals, and consider resizing very large
+> photos/PDFs before uploading. Django serves them as-is; for better performance
+> use modern formats (WebP) and keep dimensions sensible. Use `loading="lazy"`
+> on offscreen images where possible (the templates do this for lists/gallery).
+
 ### 7a. Media files (photos, PDFs) — NOT via git
 
 Uploaded files live in `media/`, which is gitignored. Copy it from your laptop:

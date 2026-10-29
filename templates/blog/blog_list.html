@@ -26,7 +26,7 @@
       {% for post in posts %}
         <article class="blog-card{% if post.cover_image %} has-cover{% endif %}">
           {% if post.cover_image %}
-            <div class="blog-cover"><img src="{{ post.cover_image.url }}" alt="{{ post.title }}" loading="lazy"></div>
+            <div class="blog-cover"><img src="{{ post.cover_image.url }}" alt="{{ post.title }}" loading="lazy" decoding="async"></div>
           {% endif %}
           <span class="index">{{ page_obj.start_index|add:forloop.counter0|stringformat:"02d" }}</span>
           <span class="category">{{ post.category }}</span>

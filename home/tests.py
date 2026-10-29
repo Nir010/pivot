@@ -1,14 +1,17 @@
 from datetime import datetime, timezone
 
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from django.db import connection
 from django.db.migrations.executor import MigrationExecutor
-from django.test import TestCase, TransactionTestCase, override_settings
+from django.test import RequestFactory, TestCase, TransactionTestCase, override_settings
 from django.urls import reverse
 
 from blog.models import Category, Post
 from projects.models import Project, ProjectCategory
-from .models import Notice, Service, TeamMember
+from .forms import ContactForm
+from .models import ContactMessage, Notice, Service, SiteSettings, TeamMember
+from .views import contact
 
 
 class OrderingTestsMixin:
@@ -621,3 +624,112 @@ class SeoEndpointTests(TestCase):
         self.assertEqual(response["Content-Type"], "text/plain")
         self.assertContains(response, "Disallow: /admin/")
         self.assertContains(response, "Sitemap: https://example.test/sitemap.xml")
+
+
+class ContactFormTests(TestCase):
+    def test_message_max_length_is_enforced(self):
+        form = ContactForm(
+            data={
+                "name": "Test",
+                "email": "test@example.com",
+                "organization": "",
+                "message": "x" * 5001,
+                "website": "",
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn("message", form.errors)
+
+    def test_honeypot_rejects_filled_value(self):
+        form = ContactForm(
+            data={
+                "name": "Test",
+                "email": "test@example.com",
+                "organization": "",
+                "message": "Hello",
+                "website": "http://spam.example",
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn("website", form.errors)
+
+
+class ContactViewTests(TestCase):
+    def setUp(self):
+        ContactMessage.objects.all().delete()
+
+    def test_invalid_post_rerenders_with_values_and_errors(self):
+        response = self.client.post(
+            reverse("contact"),
+            {"name": "", "email": "bad", "organization": "Org", "message": ""},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Please correct the highlighted fields below.")
+        self.assertContains(response, 'value="Org"')
+        self.assertContains(response, "field-error")
+
+    def test_valid_post_saves_message(self):
+        count = ContactMessage.objects.count()
+        response = self.client.post(
+            reverse("contact"),
+            {
+                "name": "Test User",
+                "email": "test@example.com",
+                "organization": "Org",
+                "message": "Hello there",
+                "website": "",
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(ContactMessage.objects.count(), count + 1)
+
+    def test_ajax_invalid_returns_json_errors(self):
+        response = self.client.post(
+            reverse("contact"),
+            {"name": "", "email": "bad", "message": "", "website": ""},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+            HTTP_ACCEPT="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["ok"], False)
+        self.assertIn("email", response.json()["errors"])
+
+    def test_ajax_valid_returns_json_ok(self):
+        response = self.client.post(
+            reverse("contact"),
+            {
+                "name": "AJAX User",
+                "email": "ajax@example.com",
+                "organization": "",
+                "message": "Hi",
+                "website": "",
+            },
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+            HTTP_ACCEPT="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["ok"], True)
+        ContactMessage.objects.filter(email="ajax@example.com").delete()
+
+
+class SiteSettingsCacheTests(TestCase):
+    def setUp(self):
+        SiteSettings.objects.all().delete()
+        cache.clear()
+
+    def tearDown(self):
+        SiteSettings.objects.all().delete()
+        cache.clear()
+
+    def test_context_processor_caches_settings_for_timeout(self):
+        factory = RequestFactory()
+        SiteSettings.objects.create(pk=1, site_name="Pivot")
+        request = factory.get("/")
+        from home.context_processors import CACHE_KEY, site_settings
+
+        first = site_settings(request)["settings"]
+        self.assertEqual(first.site_name, "Pivot")
+        SiteSettings.objects.all().update(site_name="Changed")
+        second = site_settings(request)["settings"]
+        self.assertEqual(second.site_name, "Pivot")
+        self.assertEqual(cache.get(CACHE_KEY).site_name, "Pivot")

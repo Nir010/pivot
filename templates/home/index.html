@@ -131,7 +131,7 @@
              target="_blank" rel="noopener"
              aria-label="Open image for {{ notice.title }} in a new tab">
             <img class="notice-image" src="{{ notice.image.url }}"
-                 alt="{{ notice.title }}" decoding="async">
+                 alt="{{ notice.title }}" loading="lazy" decoding="async">
           </a>
         {% endif %}
         {% if notice.body %}

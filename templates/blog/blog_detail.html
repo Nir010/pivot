@@ -18,7 +18,7 @@
 <section class="section">
   <div class="wrap" style="max-width: 70ch;">
     {% if post.cover_image %}
-      <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" style="max-width:100%; height:auto; margin-bottom:24px;">
+      <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" style="max-width:100%; height:auto; margin-bottom:24px;" loading="lazy" decoding="async">
     {% endif %}
     {{ post.body|linebreaks }}
   </div>

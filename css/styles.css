@@ -727,8 +727,8 @@ background: linear-gradient(160deg, var(--deep-blue), var(--brand-blue));  margi
   z-index: 1;
 }
 .page-head .wrap{ animation: contentRise 0.75s ease-out both; }
-.page-head .eyebrow{ color: var(--brand-red); font-size: 1rem; font-weight: 500; margin-bottom: 10px; }
-.page-head h1{ font-size: clamp(1.9rem, 5vw, 4.6rem); }
+.page-head .eyebrow{ color: var(--brand-red); font-size: 1rem; font-weight: bold; margin-bottom: 10px; }
+.page-head h2{ font-size: clamp(1.9rem, 5vw, 4.6rem); }
 @media (max-width: 640px){
   .page-head h1{ font-size: clamp(1.6rem, 6.5vw, 2.2rem); }
 }
